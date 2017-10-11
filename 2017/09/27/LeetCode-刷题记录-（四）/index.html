@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="Sliding Window Maximum https://leetcode.com/problems/sliding-window-maximum/description/  题意一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;= a[i]，那么对">
+<meta name="description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路 注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;">
 <meta name="keywords" content="LeetCode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 刷题记录 （四）">
 <meta property="og:url" content="http://yoursite.com/2017/09/27/LeetCode-刷题记录-（四）/index.html">
 <meta property="og:site_name" content="Megrez">
-<meta property="og:description" content="Sliding Window Maximum https://leetcode.com/problems/sliding-window-maximum/description/  题意一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;= a[i]，那么对">
+<meta property="og:description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路 注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-09-27T07:06:44.818Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode 刷题记录 （四）">
-<meta name="twitter:description" content="Sliding Window Maximum https://leetcode.com/problems/sliding-window-maximum/description/  题意一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;= a[i]，那么对">
+<meta name="twitter:description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路 注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;">
 
 
 
@@ -340,22 +340,29 @@
       
 
       
-        <h1 id="Sliding-Window-Maximum"><a href="#Sliding-Window-Maximum" class="headerlink" title="Sliding Window Maximum"></a>Sliding Window Maximum</h1><blockquote>
-<p><a href="https://leetcode.com/problems/sliding-window-maximum/description/" target="_blank" rel="external">https://leetcode.com/problems/sliding-window-maximum/description/</a></p>
+        <h1 id="sliding-window-maximum">Sliding Window Maximum</h1>
+<blockquote>
+<p>https://leetcode.com/problems/sliding-window-maximum/description/</p>
 </blockquote>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>一个有<code>n</code>个数字的数组<code>a</code>，对于给定的<code>k</code>，对每一组连续的k个数组元素（即<code>a[i...i+k-1]</code> ），输出这k个元素中的最大值。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>注意到对于<code>a[i]</code>，如果存在<code>j &gt; i</code>使得<code>a[j] &gt;= a[i]</code>，那么对于所有末端位置大于等于<code>j</code>的k元组，<code>a[i]</code>都不可能会是这个k元组中的最大值，基于只可能出现以下几种情况：</p>
+<h2 id="题意">题意</h2>
+<p>一个有<code>n</code>个数字的数组<code>a</code>，对于给定的<code>k</code>，对每一组连续的k个数组元素（即<code>a[i...i+k-1]</code> ），输出这k个元素中的最大值。</p>
+<h2 id="思路">思路</h2>
+<p>注意到对于<code>a[i]</code>，如果存在<code>j &gt; i</code>使得<code>a[j] &gt;= a[i]</code>，那么对于所有末端位置大于等于<code>j</code>的k元组，<code>a[i]</code>都不可能会是这个k元组中的最大值，基于只可能出现以下几种情况：</p>
 <ul>
 <li><code>a[i]</code>不在这个k元组中，此时<code>a[i]</code>自然不可能是这个k元组的最值；</li>
 <li><code>a[i]</code>在这个k元组中，但因该k元组末端位置在<code>j</code>右侧，即<code>a[j]</code>也在k元组中，<code>a[i]</code>被<code>a[j]</code> 淘汰；</li>
 </ul>
 <p>因此可以枚举k元组的右侧端点<code>t</code>，同时维护一个队列：每当<code>t</code>右移，则将<code>a[t]</code>加入队列尾，在加入前淘汰（移除）所有在队列中的不大于<code>a[t]</code>的元素。经过这一过程后的队列头就是以<code>t</code>为右侧端点的k元组的最大值。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; maxSlidingWindow(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k) &#123;</div><div class="line">        <span class="built_in">list</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.front().second &lt; i - k + <span class="number">1</span>) q.pop_front();</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.back().first &lt; nums[i]) q.pop_back();</div><div class="line">            q.push_back(&#123; nums[i], i &#125;);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) res.push_back(q.front().first);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h1 id="Binary-Tree-Postorder-Traversal"><a href="#Binary-Tree-Postorder-Traversal" class="headerlink" title="Binary Tree Postorder Traversal"></a>Binary Tree Postorder Traversal</h1><blockquote>
-<p><a href="https://leetcode.com/problems/binary-tree-postorder-traversal/description/" target="_blank" rel="external">https://leetcode.com/problems/binary-tree-postorder-traversal/description/</a></p>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; maxSlidingWindow(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k) &#123;</div><div class="line">        <span class="built_in">list</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.front().second &lt; i - k + <span class="number">1</span>) q.pop_front();</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.back().first &lt; nums[i]) q.pop_back();</div><div class="line">            q.push_back(&#123; nums[i], i &#125;);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) res.push_back(q.front().first);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="binary-tree-postorder-traversal">Binary Tree Postorder Traversal</h1>
+<blockquote>
+<p>https://leetcode.com/problems/binary-tree-postorder-traversal/description/</p>
 </blockquote>
-<h2 id="题意-1"><a href="#题意-1" class="headerlink" title="题意"></a>题意</h2><p>给定一个二叉树，以后序遍历方式输出所有的节点。（这题居然也是Hard）</p>
-<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for a binary tree node.</span></div><div class="line"><span class="comment"> * struct TreeNode &#123;</span></div><div class="line"><span class="comment"> *         int val;</span></div><div class="line"><span class="comment"> *         TreeNode *left;</span></div><div class="line"><span class="comment"> *         TreeNode *right;</span></div><div class="line"><span class="comment"> *         TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; postorderTraversal(TreeNode* root) &#123;</div><div class="line">                res.clear();</div><div class="line">                traverse(root);</div><div class="line">                <span class="keyword">return</span> res;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</div><div class="line">                traverse(root-&gt;left);</div><div class="line">                traverse(root-&gt;right);</div><div class="line">                res.push_back(root-&gt;val);</div><div class="line">        &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="题意-1">题意</h2>
+<p>给定一个二叉树，以后序遍历方式输出所有的节点。（这题居然也是Hard）</p>
+<h2 id="代码-1">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for a binary tree node.</span></div><div class="line"><span class="comment"> * struct TreeNode &#123;</span></div><div class="line"><span class="comment"> *         int val;</span></div><div class="line"><span class="comment"> *         TreeNode *left;</span></div><div class="line"><span class="comment"> *         TreeNode *right;</span></div><div class="line"><span class="comment"> *         TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; postorderTraversal(TreeNode* root) &#123;</div><div class="line">                res.clear();</div><div class="line">                traverse(root);</div><div class="line">                <span class="keyword">return</span> res;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</div><div class="line">                traverse(root-&gt;left);</div><div class="line">                traverse(root-&gt;right);</div><div class="line">                res.push_back(root-&gt;val);</div><div class="line">        &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -395,6 +402,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/11/LeetCode-刷题记录-（五）/" rel="prev" title="LeetCode 刷题记录 （五）">
+                LeetCode 刷题记录 （五） <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -471,7 +482,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -554,7 +565,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Sliding-Window-Maximum"><span class="nav-number">1.</span> <span class="nav-text">Sliding Window Maximum</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题意"><span class="nav-number">1.1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.3.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Binary-Tree-Postorder-Traversal"><span class="nav-number">2.</span> <span class="nav-text">Binary Tree Postorder Traversal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题意-1"><span class="nav-number">2.1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码-1"><span class="nav-number">2.2.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sliding-window-maximum"><span class="nav-number">1.</span> <span class="nav-text">Sliding Window Maximum</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题意"><span class="nav-number">1.1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.3.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#binary-tree-postorder-traversal"><span class="nav-number">2.</span> <span class="nav-text">Binary Tree Postorder Traversal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题意-1"><span class="nav-number">2.1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码-1"><span class="nav-number">2.2.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -732,6 +743,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 

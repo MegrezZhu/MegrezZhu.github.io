@@ -273,6 +273,152 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/LeetCode-刷题记录-（五）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhu Chu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Megrez">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/11/LeetCode-刷题记录-（五）/" itemprop="url">LeetCode 刷题记录 （五）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T14:38:47+08:00">
+                2017-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="dungeon-game">Dungeon Game</h1>
+<blockquote>
+<p>https://leetcode.com/problems/dungeon-game/description/</p>
+</blockquote>
+<h2 id="题意">题意</h2>
+<p>一个<span class="math inline">\(m\times n\)</span>的矩阵当中，一个骑士从左上角走到右下角，只能向右或向下移动。骑士有初始血量<span class="math inline">\(H\)</span>，矩阵的每一格中有一个数值<span class="math inline">\(A_{i,j}\)</span>表示移动到这一格时对血量的增减，计算能保证不在任意时刻血量降至0以下的最小初始血量<span class="math inline">\(H_{min}\)</span>。</p>
+<h2 id="思路">思路</h2>
+<p>因为只能向右或下移动，因此避免了走回路的情况。记<span class="math inline">\(F_{i,j}\)</span>为走到第<span class="math inline">\(i\)</span>行第<span class="math inline">\(j\)</span>列要求的最小初始血量。显然地，<span class="math inline">\(F_{i,j}\)</span>只与<span class="math inline">\(F_{i,j+1}\)</span>、<span class="math inline">\(F_{i+1,j}\)</span>以及<span class="math inline">\(A_{i,j}\)</span>相关。于是有下面的关系： <span class="math display">\[
+F_{i,j}=max\{0,-A_{i,j}+min\{F_{i,j+1},F_{i+1,j}\}\}
+\]</span></p>
+<p>特别地，对于终点有： <span class="math display">\[
+F_{m,n}=max\{0, -A_{m,n}\}
+\]</span> 上面的递推保证了在任意时刻血量均不会降为负数，因为题目里需要正数血量，因此最后的答案就是<span class="math inline">\(F_{m,n}+1\)</span>。</p>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">int</span> <span class="title">calculateMinimumHP</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; dungeon)</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> n = dungeon.size(), m = dungeon.front().size();</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; res;</div><div class="line">		res.resize(n + <span class="number">1</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> it = res.begin(); it != res.end(); it++) it-&gt;resize(m + <span class="number">1</span>, <span class="number">1e9</span>);</div><div class="line">		res[n - <span class="number">1</span>][m - <span class="number">1</span>] = max(-dungeon[n - <span class="number">1</span>][m - <span class="number">1</span>], <span class="number">0</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = m - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--) &#123;</div><div class="line">				<span class="keyword">if</span> (i == n - <span class="number">1</span> &amp;&amp; j == m - <span class="number">1</span>) <span class="keyword">continue</span>;</div><div class="line">				res[i][j] = -dungeon[i][j] + min(res[i][j + <span class="number">1</span>], res[i + <span class="number">1</span>][j]);</div><div class="line">				res[i][j] = max(res[i][j], <span class="number">0</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> res[<span class="number">0</span>][<span class="number">0</span>] + <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="shortest-palindrome">Shortest Palindrome</h1>
+<blockquote>
+<p>https://leetcode.com/problems/shortest-palindrome/description/</p>
+</blockquote>
+<h2 id="题意-1">题意</h2>
+<p>给定一个字符串<span class="math inline">\(S\)</span>，在它前面增加若干字符得到<span class="math inline">\(S&#39;\)</span>使得它成为一个回文字符串，求满足要求的最短的<span class="math inline">\(S&#39;\)</span>。</p>
+<h2 id="思路-1">思路</h2>
+<p>如果能将<span class="math inline">\(S\)</span>分解为<span class="math inline">\(S_1S_2\)</span>，其中<span class="math inline">\(S_1\)</span>为回文串，那么只需要在<span class="math inline">\(S_1S_2\)</span>前加上<span class="math inline">\(S_2\)</span>的翻转<span class="math inline">\(S&#39;_2\)</span>，得到的<span class="math inline">\(S&#39;_2S_1S_2\)</span>就是一个回文字符串。</p>
+<p>问题变为寻找一个最长的回文子串<span class="math inline">\(S_1\)</span>。</p>
+<p>这是一个经典的问题，可以使用<a href="https://segmentfault.com/a/1190000003914228" target="_blank" rel="external">Manacher</a>算法解决。</p>
+<h2 id="代码-1">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="built_in">string</span> <span class="title">preprocess</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span>&amp; s)</span> </span>&#123;</div><div class="line">		<span class="built_in">string</span> res;</div><div class="line">		res.resize(s.size() * <span class="number">2</span> + <span class="number">1</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; res.size(); i++) &#123;</div><div class="line">			<span class="keyword">if</span> (i % <span class="number">2</span>) res[i] = s[i / <span class="number">2</span>];</div><div class="line">			<span class="keyword">else</span> res[i] = <span class="string">'#'</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> res;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">mirror</span><span class="params">(<span class="keyword">int</span> pos, <span class="keyword">int</span> middle)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="number">2</span> * middle - pos;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">longestPrefixingPalidrome</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span>&amp; s)</span> </span>&#123;</div><div class="line">		<span class="built_in">string</span> ss = preprocess(s);</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; rl = &#123; <span class="number">0</span> &#125;;</div><div class="line">		<span class="keyword">int</span> maxRight = <span class="number">0</span>, pos = <span class="number">0</span>, ans = <span class="number">0</span>;</div><div class="line"></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; ss.length(); i++) &#123;</div><div class="line">			<span class="keyword">int</span> j;</div><div class="line">			<span class="keyword">if</span> (i &gt; maxRight) j = i;</div><div class="line">			<span class="keyword">else</span> &#123;</div><div class="line">				<span class="comment">// i &lt;= maxRight</span></div><div class="line">				<span class="keyword">int</span> knownLen = rl[mirror(i, pos)];</div><div class="line">				j = min(i + knownLen, maxRight);</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">while</span> (j &lt; ss.length() &amp;&amp; mirror(j, i) &gt;= <span class="number">0</span> &amp;&amp; ss[j] == ss[mirror(j, i)]) j++;</div><div class="line">			j--;</div><div class="line">			rl.push_back(j - i);</div><div class="line">			<span class="keyword">if</span> (j &gt; maxRight) &#123;</div><div class="line">				maxRight = j;</div><div class="line">				pos = i;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (mirror(j, i) == <span class="number">0</span>) ans = max(ans, rl[i]);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> ans;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="built_in">string</span> <span class="title">shortestPalindrome</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> len = longestPrefixingPalidrome(s);</div><div class="line">		<span class="keyword">auto</span> left = s.substr(len);</div><div class="line">		reverse(left.begin(), left.end());</div><div class="line">		<span class="keyword">return</span> left + s;</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/LeetCode-刷题记录-（四）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -344,22 +490,29 @@
       
         
           
-            <h1 id="Sliding-Window-Maximum"><a href="#Sliding-Window-Maximum" class="headerlink" title="Sliding Window Maximum"></a>Sliding Window Maximum</h1><blockquote>
-<p><a href="https://leetcode.com/problems/sliding-window-maximum/description/" target="_blank" rel="external">https://leetcode.com/problems/sliding-window-maximum/description/</a></p>
+            <h1 id="sliding-window-maximum">Sliding Window Maximum</h1>
+<blockquote>
+<p>https://leetcode.com/problems/sliding-window-maximum/description/</p>
 </blockquote>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>一个有<code>n</code>个数字的数组<code>a</code>，对于给定的<code>k</code>，对每一组连续的k个数组元素（即<code>a[i...i+k-1]</code> ），输出这k个元素中的最大值。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>注意到对于<code>a[i]</code>，如果存在<code>j &gt; i</code>使得<code>a[j] &gt;= a[i]</code>，那么对于所有末端位置大于等于<code>j</code>的k元组，<code>a[i]</code>都不可能会是这个k元组中的最大值，基于只可能出现以下几种情况：</p>
+<h2 id="题意">题意</h2>
+<p>一个有<code>n</code>个数字的数组<code>a</code>，对于给定的<code>k</code>，对每一组连续的k个数组元素（即<code>a[i...i+k-1]</code> ），输出这k个元素中的最大值。</p>
+<h2 id="思路">思路</h2>
+<p>注意到对于<code>a[i]</code>，如果存在<code>j &gt; i</code>使得<code>a[j] &gt;= a[i]</code>，那么对于所有末端位置大于等于<code>j</code>的k元组，<code>a[i]</code>都不可能会是这个k元组中的最大值，基于只可能出现以下几种情况：</p>
 <ul>
 <li><code>a[i]</code>不在这个k元组中，此时<code>a[i]</code>自然不可能是这个k元组的最值；</li>
 <li><code>a[i]</code>在这个k元组中，但因该k元组末端位置在<code>j</code>右侧，即<code>a[j]</code>也在k元组中，<code>a[i]</code>被<code>a[j]</code> 淘汰；</li>
 </ul>
 <p>因此可以枚举k元组的右侧端点<code>t</code>，同时维护一个队列：每当<code>t</code>右移，则将<code>a[t]</code>加入队列尾，在加入前淘汰（移除）所有在队列中的不大于<code>a[t]</code>的元素。经过这一过程后的队列头就是以<code>t</code>为右侧端点的k元组的最大值。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; maxSlidingWindow(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k) &#123;</div><div class="line">        <span class="built_in">list</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.front().second &lt; i - k + <span class="number">1</span>) q.pop_front();</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.back().first &lt; nums[i]) q.pop_back();</div><div class="line">            q.push_back(&#123; nums[i], i &#125;);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) res.push_back(q.front().first);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h1 id="Binary-Tree-Postorder-Traversal"><a href="#Binary-Tree-Postorder-Traversal" class="headerlink" title="Binary Tree Postorder Traversal"></a>Binary Tree Postorder Traversal</h1><blockquote>
-<p><a href="https://leetcode.com/problems/binary-tree-postorder-traversal/description/" target="_blank" rel="external">https://leetcode.com/problems/binary-tree-postorder-traversal/description/</a></p>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; maxSlidingWindow(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k) &#123;</div><div class="line">        <span class="built_in">list</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.front().second &lt; i - k + <span class="number">1</span>) q.pop_front();</div><div class="line">            <span class="keyword">while</span> (!q.empty() &amp;&amp; q.back().first &lt; nums[i]) q.pop_back();</div><div class="line">            q.push_back(&#123; nums[i], i &#125;);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) res.push_back(q.front().first);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="binary-tree-postorder-traversal">Binary Tree Postorder Traversal</h1>
+<blockquote>
+<p>https://leetcode.com/problems/binary-tree-postorder-traversal/description/</p>
 </blockquote>
-<h2 id="题意-1"><a href="#题意-1" class="headerlink" title="题意"></a>题意</h2><p>给定一个二叉树，以后序遍历方式输出所有的节点。（这题居然也是Hard）</p>
-<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for a binary tree node.</span></div><div class="line"><span class="comment"> * struct TreeNode &#123;</span></div><div class="line"><span class="comment"> *         int val;</span></div><div class="line"><span class="comment"> *         TreeNode *left;</span></div><div class="line"><span class="comment"> *         TreeNode *right;</span></div><div class="line"><span class="comment"> *         TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; postorderTraversal(TreeNode* root) &#123;</div><div class="line">                res.clear();</div><div class="line">                traverse(root);</div><div class="line">                <span class="keyword">return</span> res;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</div><div class="line">                traverse(root-&gt;left);</div><div class="line">                traverse(root-&gt;right);</div><div class="line">                res.push_back(root-&gt;val);</div><div class="line">        &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="题意-1">题意</h2>
+<p>给定一个二叉树，以后序遍历方式输出所有的节点。（这题居然也是Hard）</p>
+<h2 id="代码-1">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for a binary tree node.</span></div><div class="line"><span class="comment"> * struct TreeNode &#123;</span></div><div class="line"><span class="comment"> *         int val;</span></div><div class="line"><span class="comment"> *         TreeNode *left;</span></div><div class="line"><span class="comment"> *         TreeNode *right;</span></div><div class="line"><span class="comment"> *         TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; postorderTraversal(TreeNode* root) &#123;</div><div class="line">                res.clear();</div><div class="line">                traverse(root);</div><div class="line">                <span class="keyword">return</span> res;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</div><div class="line">                traverse(root-&gt;left);</div><div class="line">                traverse(root-&gt;right);</div><div class="line">                res.push_back(root-&gt;val);</div><div class="line">        &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
           
         
@@ -479,15 +632,19 @@
       
         
           
-            <h1 id="Interleaving-String"><a href="#Interleaving-String" class="headerlink" title="Interleaving String"></a>Interleaving String</h1><blockquote>
-<p><a href="https://leetcode.com/problems/interleaving-string/description/" target="_blank" rel="external">https://leetcode.com/problems/interleaving-string/description/</a></p>
+            <h1 id="interleaving-string">Interleaving String</h1>
+<blockquote>
+<p>https://leetcode.com/problems/interleaving-string/description/</p>
 </blockquote>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。</p>
+<h2 id="题意">题意</h2>
+<p>给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。</p>
 <p>比如<code>&quot;abc&quot;</code>就是由<code>&quot;ac&quot;</code>与<code>&quot;b&quot;</code>交错构成的，而<code>&quot;cab&quot;</code>不是。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>用类似动态规划的思路，<code>dp[i][j]</code>表示是否存在一个交错方式使得<code>s1</code>的前<code>i</code>位与<code>s2</code>的前<code>j</code>位交错能够生成<code>s3</code>的前<code>i+j</code>位。</p>
+<h2 id="思路">思路</h2>
+<p>用类似动态规划的思路，<code>dp[i][j]</code>表示是否存在一个交错方式使得<code>s1</code>的前<code>i</code>位与<code>s2</code>的前<code>j</code>位交错能够生成<code>s3</code>的前<code>i+j</code>位。</p>
 <p>于是有这样的状态关系：<code>dp[i][j] = (dp[i-1][j] &amp;&amp; s1[i] == s3[i+j]) || (dp[i][j-1] &amp;&amp; d2[j] == s3[i+j])</code>。</p>
 <p>实现一下递推就好了，一般可以用记忆化或者类似BFS的递推形式，下面我用的是后一种方法。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isInterleave</span><span class="params">(<span class="built_in">string</span> s1, <span class="built_in">string</span> s2, <span class="built_in">string</span> s3)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (s1.size() + s2.size() != s3.size()) <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;&gt; dp;</div><div class="line">        dp.resize(s1.size() + <span class="number">1</span>);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = dp.begin(); it != dp.end(); it++) it-&gt;resize(s2.size() + <span class="number">1</span>, <span class="literal">false</span>);</div><div class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</div><div class="line"></div><div class="line">        <span class="built_in">list</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; li = &#123; &#123;<span class="number">0</span>, <span class="number">0</span>&#125; &#125;;</div><div class="line">        <span class="keyword">while</span> (!li.empty()) &#123;</div><div class="line">            <span class="keyword">auto</span> p = li.front();</div><div class="line">            li.pop_front();</div><div class="line">            dp[p.first][p.second] = <span class="literal">true</span>;</div><div class="line">            <span class="keyword">if</span> (p.first + p.second + <span class="number">1</span> &gt; s3.size()) <span class="keyword">continue</span>;</div><div class="line">            <span class="keyword">char</span> next = s3[p.first + p.second];</div><div class="line">            <span class="keyword">if</span> (p.first &lt; s1.size() &amp;&amp; s1[p.first] == next) &#123;</div><div class="line">                <span class="keyword">if</span> (!dp[p.first + <span class="number">1</span>][p.second]) &#123;</div><div class="line">                    dp[p.first + <span class="number">1</span>][p.second] = <span class="literal">true</span>;</div><div class="line">                    li.push_back(&#123; p.first + <span class="number">1</span>, p.second &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (p.second &lt; s2.size() &amp;&amp; s2[p.second] == next) &#123;</div><div class="line">                <span class="keyword">if</span> (!dp[p.first][p.second + <span class="number">1</span>]) &#123;</div><div class="line">                    dp[p.first][p.second + <span class="number">1</span>] = <span class="literal">true</span>;</div><div class="line">                    li.push_back(&#123; p.first, p.second + <span class="number">1</span> &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> dp[s1.size()][s2.size()];</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isInterleave</span><span class="params">(<span class="built_in">string</span> s1, <span class="built_in">string</span> s2, <span class="built_in">string</span> s3)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (s1.size() + s2.size() != s3.size()) <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;&gt; dp;</div><div class="line">        dp.resize(s1.size() + <span class="number">1</span>);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = dp.begin(); it != dp.end(); it++) it-&gt;resize(s2.size() + <span class="number">1</span>, <span class="literal">false</span>);</div><div class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</div><div class="line"></div><div class="line">        <span class="built_in">list</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; li = &#123; &#123;<span class="number">0</span>, <span class="number">0</span>&#125; &#125;;</div><div class="line">        <span class="keyword">while</span> (!li.empty()) &#123;</div><div class="line">            <span class="keyword">auto</span> p = li.front();</div><div class="line">            li.pop_front();</div><div class="line">            dp[p.first][p.second] = <span class="literal">true</span>;</div><div class="line">            <span class="keyword">if</span> (p.first + p.second + <span class="number">1</span> &gt; s3.size()) <span class="keyword">continue</span>;</div><div class="line">            <span class="keyword">char</span> next = s3[p.first + p.second];</div><div class="line">            <span class="keyword">if</span> (p.first &lt; s1.size() &amp;&amp; s1[p.first] == next) &#123;</div><div class="line">                <span class="keyword">if</span> (!dp[p.first + <span class="number">1</span>][p.second]) &#123;</div><div class="line">                    dp[p.first + <span class="number">1</span>][p.second] = <span class="literal">true</span>;</div><div class="line">                    li.push_back(&#123; p.first + <span class="number">1</span>, p.second &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (p.second &lt; s2.size() &amp;&amp; s2[p.second] == next) &#123;</div><div class="line">                <span class="keyword">if</span> (!dp[p.first][p.second + <span class="number">1</span>]) &#123;</div><div class="line">                    dp[p.first][p.second + <span class="number">1</span>] = <span class="literal">true</span>;</div><div class="line">                    li.push_back(&#123; p.first, p.second + <span class="number">1</span> &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> dp[s1.size()][s2.size()];</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
           
         
@@ -607,26 +764,33 @@
       
         
           
-            <h1 id="Regular-Expression-Matching"><a href="#Regular-Expression-Matching" class="headerlink" title="Regular Expression Matching"></a>Regular Expression Matching</h1><blockquote>
-<p><a href="https://leetcode.com/problems/regular-expression-matching/description/" target="_blank" rel="external">https://leetcode.com/problems/regular-expression-matching/description/</a></p>
+            <h1 id="regular-expression-matching">Regular Expression Matching</h1>
+<blockquote>
+<p>https://leetcode.com/problems/regular-expression-matching/description/</p>
 </blockquote>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>给定一个正则表达式，和一个字符串，判断给定的正则表达式是否与给定的字符串匹配。</p>
+<h2 id="题意">题意</h2>
+<p>给定一个正则表达式，和一个字符串，判断给定的正则表达式是否与给定的字符串匹配。</p>
 <p>这里的正则表达式是简化版的，只有<code>.</code> 与<code>*</code>两种元字符，而且只要求判断是否整体匹配（即整个字符串都是匹配的），所以比实现一个完整的字符串简单多了。</p>
-<h2 id="非常暴力的做法"><a href="#非常暴力的做法" class="headerlink" title="非常暴力的做法"></a>非常暴力的做法</h2><p>直接上带正则表达式支持的语言就好（逃</p>
+<h2 id="非常暴力的做法">非常暴力的做法</h2>
+<p>直接上带正则表达式支持的语言就好（逃</p>
 <p>比如<strong>JavaScript</strong>：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * @param &#123;string&#125; s</span></div><div class="line"><span class="comment"> * @param &#123;string&#125; p</span></div><div class="line"><span class="comment"> * @return &#123;boolean&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">const</span> isMatch = <span class="function">(<span class="params">s, p</span>) =&gt;</span> !!s.match(<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">`^<span class="subst">$&#123;p&#125;</span>$`</span>));</div></pre></td></tr></table></figure>
 <p>完事。</p>
-<h2 id="没那么暴力的做法"><a href="#没那么暴力的做法" class="headerlink" title="没那么暴力的做法"></a>没那么暴力的做法</h2><h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>记待匹配串为s，正则表达式串为p，n为s的长度，m为p的长度。</p>
+<h2 id="没那么暴力的做法">没那么暴力的做法</h2>
+<h3 id="解题思路">解题思路</h3>
+<p>记待匹配串为s，正则表达式串为p，n为s的长度，m为p的长度。</p>
 <p>记n、m分别为待匹配串与正则表达式串的长度， 并级。</p>
 <p>以类似动态规划的思路，以<code>f[i][j]</code>表示字符串匹配到第i位、正则串匹配到第j位的可行性（那么最终的匹配结果就是<code>f[n][m]</code>）。因此一共有mn个状态。在最坏情况下，需要把所有状态的结果都计算出来，因此时间复杂度为<code>O(mn)</code>。</p>
 <p>状态的转移相对比较简单：</p>
 <ul>
 <li>对于最简单的字符匹配，有<code>f[i + 1][j + 1] = f[i][j]</code>（<code>s[i + 1] == p[j + 1]</code>时）</li>
-<li>对于<code>.*</code>与<code>c*</code>的匹配，有<code>f[i + k][j + 2] = f[i][j]</code>（其中<code>k = 0, 1, ...</code>，需满足<code>s[i + 1] == s[i + 2] == ... == s[i + k] = c</code> 或 <code>c == &#39;.&#39;</code> 。其中c为被<code>*</code> 修饰的待匹配字符）</li>
+<li>对于<code>.*</code>与<code>c*</code>的匹配，有<code>f[i + k][j + 2] = f[i][j]</code>（其中<code>k = 0, 1, ...</code>，需满足<code>s[i + 1] == s[i + 2] == ... == s[i + k] = c</code> 或 <code>c == '.'</code> 。其中c为被<code>*</code> 修饰的待匹配字符）</li>
 </ul>
 <p>具体实现见后面的代码。</p>
-<h3 id="坑点"><a href="#坑点" class="headerlink" title="坑点"></a>坑点</h3><p>边界条件比较复杂。</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="built_in">string</span> ss, <span class="built_in">string</span> pp)</span> </span>&#123;</div><div class="line">        s = <span class="string">' '</span> + ss;</div><div class="line">        p = <span class="string">' '</span> + pp;</div><div class="line">        res.resize(s.size());</div><div class="line">        calculated.resize(s.size());</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.size(); i++) &#123;</div><div class="line">            <span class="comment">// 初始化</span></div><div class="line">            res[i].clear();</div><div class="line">            res[i].resize(p.size(), <span class="literal">false</span>);</div><div class="line">            calculated[i].clear();</div><div class="line">            calculated[i].resize(p.size(), <span class="literal">false</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        match(<span class="number">0</span>, <span class="number">0</span>);</div><div class="line">        <span class="keyword">return</span> res[s.size() - <span class="number">1</span>][p.size() - <span class="number">1</span>];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">match</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (i &gt;= s.size() || j &gt;= p.size()) <span class="keyword">return</span>;</div><div class="line">        <span class="keyword">if</span> (calculated[i][j]) <span class="keyword">return</span>;</div><div class="line">        res[i][j] = calculated[i][j] = <span class="literal">true</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (j &lt; p.size() - <span class="number">1</span>) &#123; <span class="comment">// regexp remained</span></div><div class="line">            <span class="keyword">bool</span> starMatch = <span class="literal">false</span>;</div><div class="line">            <span class="keyword">if</span> (j &lt; p.size() - <span class="number">2</span> &amp;&amp; p[j + <span class="number">2</span>] == <span class="string">'*'</span>) starMatch = <span class="literal">true</span>;</div><div class="line">            <span class="keyword">if</span> (i &lt; s.size() - <span class="number">1</span>) &#123;</div><div class="line">                <span class="keyword">char</span> toMatch = p[j + <span class="number">1</span>];</div><div class="line">                <span class="keyword">bool</span> anyMatch = toMatch == <span class="string">'.'</span>;</div><div class="line">                <span class="keyword">if</span> (starMatch) &#123;</div><div class="line">                    <span class="keyword">int</span> k = i;</div><div class="line">                    <span class="keyword">while</span> (k &lt; s.size()) &#123;</div><div class="line">                        match(k, j + <span class="number">2</span>);</div><div class="line">                        <span class="keyword">if</span> (k &lt; s.size() - <span class="number">1</span> &amp;&amp; (anyMatch || s[k + <span class="number">1</span>] == toMatch)) k++;</div><div class="line">                        <span class="keyword">else</span> <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">if</span> (anyMatch || s[i + <span class="number">1</span>] == toMatch) match(i + <span class="number">1</span>, j + <span class="number">1</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">if</span> (starMatch) match(i, j + <span class="number">2</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="built_in">string</span> s, p;</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;&gt; res, calculated;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="坑点">坑点</h3>
+<p>边界条件比较复杂。</p>
+<h3 id="代码">代码</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="built_in">string</span> ss, <span class="built_in">string</span> pp)</span> </span>&#123;</div><div class="line">        s = <span class="string">' '</span> + ss;</div><div class="line">        p = <span class="string">' '</span> + pp;</div><div class="line">        res.resize(s.size());</div><div class="line">        calculated.resize(s.size());</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.size(); i++) &#123;</div><div class="line">            <span class="comment">// 初始化</span></div><div class="line">            res[i].clear();</div><div class="line">            res[i].resize(p.size(), <span class="literal">false</span>);</div><div class="line">            calculated[i].clear();</div><div class="line">            calculated[i].resize(p.size(), <span class="literal">false</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        match(<span class="number">0</span>, <span class="number">0</span>);</div><div class="line">        <span class="keyword">return</span> res[s.size() - <span class="number">1</span>][p.size() - <span class="number">1</span>];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">match</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (i &gt;= s.size() || j &gt;= p.size()) <span class="keyword">return</span>;</div><div class="line">        <span class="keyword">if</span> (calculated[i][j]) <span class="keyword">return</span>;</div><div class="line">        res[i][j] = calculated[i][j] = <span class="literal">true</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (j &lt; p.size() - <span class="number">1</span>) &#123; <span class="comment">// regexp remained</span></div><div class="line">            <span class="keyword">bool</span> starMatch = <span class="literal">false</span>;</div><div class="line">            <span class="keyword">if</span> (j &lt; p.size() - <span class="number">2</span> &amp;&amp; p[j + <span class="number">2</span>] == <span class="string">'*'</span>) starMatch = <span class="literal">true</span>;</div><div class="line">            <span class="keyword">if</span> (i &lt; s.size() - <span class="number">1</span>) &#123;</div><div class="line">                <span class="keyword">char</span> toMatch = p[j + <span class="number">1</span>];</div><div class="line">                <span class="keyword">bool</span> anyMatch = toMatch == <span class="string">'.'</span>;</div><div class="line">                <span class="keyword">if</span> (starMatch) &#123;</div><div class="line">                    <span class="keyword">int</span> k = i;</div><div class="line">                    <span class="keyword">while</span> (k &lt; s.size()) &#123;</div><div class="line">                        match(k, j + <span class="number">2</span>);</div><div class="line">                        <span class="keyword">if</span> (k &lt; s.size() - <span class="number">1</span> &amp;&amp; (anyMatch || s[k + <span class="number">1</span>] == toMatch)) k++;</div><div class="line">                        <span class="keyword">else</span> <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">if</span> (anyMatch || s[i + <span class="number">1</span>] == toMatch) match(i + <span class="number">1</span>, j + <span class="number">1</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">if</span> (starMatch) match(i, j + <span class="number">2</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="built_in">string</span> s, p;</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;&gt; res, calculated;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
           
         
@@ -746,17 +910,22 @@
       
         
           
-            <h1 id="merge-k-sorted-lists"><a href="#merge-k-sorted-lists" class="headerlink" title="merge-k-sorted-lists"></a>merge-k-sorted-lists</h1><blockquote>
-<p><a href="https://leetcode.com/problems/merge-k-sorted-lists/description/" target="_blank" rel="external">https://leetcode.com/problems/merge-k-sorted-lists/description/</a></p>
+            <h1 id="merge-k-sorted-lists">merge-k-sorted-lists</h1>
+<blockquote>
+<p>https://leetcode.com/problems/merge-k-sorted-lists/description/</p>
 </blockquote>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><blockquote>
+<h2 id="题意">题意</h2>
+<blockquote>
 <p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
 </blockquote>
 <p>给定k个已排序（升序）的链表，将他们合成为一个大的已排序链表。</p>
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>当<code>k=2</code>时就是一个典型的<code>Merge Sort</code>的情况，在这时就只需要每次比较两个待归并链表的首项并把较小的那一项加到新的已排序链表的尾部即可。</p>
+<h2 id="解题思路">解题思路</h2>
+<p>当<code>k=2</code>时就是一个典型的<code>Merge Sort</code>的情况，在这时就只需要每次比较两个待归并链表的首项并把较小的那一项加到新的已排序链表的尾部即可。</p>
 <p>扩展到k路归并的话，思路同样是取k个待归并列表的首项并将最小的一项加到结果链表的尾部。对于比较k个首项的大小并获得最小项的过程，我们可以维护一个由所有链表头组成的最小堆（直接用<code>algorithm</code>库的<code>make_heap</code> <code>push_heap</code> <code>pop_heap</code> 完成，省去自己实现），这样每次得到最小项所需的复杂度为<code>O(1)</code> ，添加删除堆节点的复杂度为<code>O(logK)</code> 。最终的复杂度为<code>O(NlogK)</code>，其中N为k个链表的总节点数。</p>
-<h2 id="坑点"><a href="#坑点" class="headerlink" title="坑点"></a>坑点</h2><p>会给空链表，即输入的vector中会有NULL项。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for singly-linked list.</span></div><div class="line"><span class="comment"> * struct ListNode &#123;</span></div><div class="line"><span class="comment"> *     int val;</span></div><div class="line"><span class="comment"> *     ListNode *next;</span></div><div class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">ListNode* <span class="title">mergeKLists</span><span class="params">(<span class="built_in">vector</span>&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;</div><div class="line">        <span class="keyword">auto</span> head = <span class="keyword">new</span> ListNode(<span class="number">0</span>), tail = head;</div><div class="line">        <span class="built_in">vector</span>&lt;ListNode*&gt; heap;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = lists.begin(); it != lists.end(); it++) &#123;</div><div class="line">            <span class="keyword">auto</span> node = *it;</div><div class="line">            <span class="keyword">if</span> (node) heap.push_back(node);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">auto</span> comp = [](ListNode* a, ListNode* b) &#123;</div><div class="line">            <span class="keyword">return</span> a-&gt;val &gt; b-&gt;val;</div><div class="line">        &#125;;</div><div class="line">        make_heap(heap.begin(), heap.end(), comp);</div><div class="line">        <span class="keyword">while</span> (heap.size()) &#123;</div><div class="line">            pop_heap(heap.begin(), heap.end(), comp);</div><div class="line">            ListNode* selected = heap.back();</div><div class="line">            heap.pop_back();</div><div class="line">            tail = tail-&gt;next = <span class="keyword">new</span> ListNode(selected-&gt;val);</div><div class="line">            <span class="keyword">if</span> (selected-&gt;next) &#123;</div><div class="line">                heap.push_back(selected-&gt;next);</div><div class="line">                push_heap(heap.begin(), heap.end(), comp);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> head-&gt;next;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="坑点">坑点</h2>
+<p>会给空链表，即输入的vector中会有NULL项。</p>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for singly-linked list.</span></div><div class="line"><span class="comment"> * struct ListNode &#123;</span></div><div class="line"><span class="comment"> *     int val;</span></div><div class="line"><span class="comment"> *     ListNode *next;</span></div><div class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">ListNode* <span class="title">mergeKLists</span><span class="params">(<span class="built_in">vector</span>&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;</div><div class="line">        <span class="keyword">auto</span> head = <span class="keyword">new</span> ListNode(<span class="number">0</span>), tail = head;</div><div class="line">        <span class="built_in">vector</span>&lt;ListNode*&gt; heap;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = lists.begin(); it != lists.end(); it++) &#123;</div><div class="line">            <span class="keyword">auto</span> node = *it;</div><div class="line">            <span class="keyword">if</span> (node) heap.push_back(node);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">auto</span> comp = [](ListNode* a, ListNode* b) &#123;</div><div class="line">            <span class="keyword">return</span> a-&gt;val &gt; b-&gt;val;</div><div class="line">        &#125;;</div><div class="line">        make_heap(heap.begin(), heap.end(), comp);</div><div class="line">        <span class="keyword">while</span> (heap.size()) &#123;</div><div class="line">            pop_heap(heap.begin(), heap.end(), comp);</div><div class="line">            ListNode* selected = heap.back();</div><div class="line">            heap.pop_back();</div><div class="line">            tail = tail-&gt;next = <span class="keyword">new</span> ListNode(selected-&gt;val);</div><div class="line">            <span class="keyword">if</span> (selected-&gt;next) &#123;</div><div class="line">                heap.push_back(selected-&gt;next);</div><div class="line">                push_heap(heap.begin(), heap.end(), comp);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> head-&gt;next;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
           
         
@@ -877,11 +1046,14 @@
         
           
             <p>作为一个新搭的Blog，总得写点什么在开头。</p>
-<h3 id="怎么又新搭了一个blog？"><a href="#怎么又新搭了一个blog？" class="headerlink" title="怎么又新搭了一个blog？"></a>怎么又新搭了一个blog？</h3><p>其实在这背后，有一个十分悲伤的故事。</p>
+<h3 id="怎么又新搭了一个blog">怎么又新搭了一个blog？</h3>
+<p>其实在这背后，有一个十分悲伤的故事。</p>
 <p>其实早在几个月前我就已经用Vue.js手写了一个SPA版的blog放在GitHub Page上了，采用的是和<a href="https://github.com/hexojs/hexo" target="_blank" rel="external">Hexo</a>类似的生成器-静态网页的架构。放在GitHub Page上的只是编译后的静态网页文件，而核心的生成器部分只放在了本地的仓库里，而这个仓库在重装系统时以“反正都在GitHub上有，删了就删了吧“这样的智障思路非常爽快地删掉了。</p>
 <p>是不是很悲伤。</p>
-<h3 id="总之"><a href="#总之" class="headerlink" title="总之"></a>总之</h3><p>我那个可怜的SPA Blog已经消散在硬盘里了<del>（反正写得也很简陋）</del>，在可以预见的未来里也没有从零开始搭一个blog的时间，就这样呗。</p>
-<h3 id="写点什么？"><a href="#写点什么？" class="headerlink" title="写点什么？"></a>写点什么？</h3><p>想写什么写什么。学习笔记也好，自己写的教程也好，开发时的入坑出坑历程也好都做个记录。</p>
+<h3 id="总之">总之</h3>
+<p>我那个可怜的SPA Blog已经消散在硬盘里了<del>（反正写得也很简陋）</del>，在可以预见的未来里也没有从零开始搭一个blog的时间，就这样呗。</p>
+<h3 id="写点什么">写点什么？</h3>
+<p>想写什么写什么。学习笔记也好，自己写的教程也好，开发时的入坑出坑历程也好都做个记录。</p>
 <p>以后不会忘记都做过些什么。</p>
 <p><img src="http://ouim3dnf4.bkt.clouddn.com/17-9-7/4189635.jpg" style="border: none"></p>
 
@@ -965,7 +1137,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1210,6 +1382,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 

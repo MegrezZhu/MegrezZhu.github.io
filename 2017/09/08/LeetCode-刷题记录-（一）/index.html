@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="merge-k-sorted-lists https://leetcode.com/problems/merge-k-sorted-lists/description/  题意 Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给定k个已排序（升序）">
+<meta name="description" content="merge-k-sorted-lists  https://leetcode.com/problems/merge-k-sorted-lists/description/  题意  Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给">
 <meta name="keywords" content="LeetCode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 刷题记录 （一）">
 <meta property="og:url" content="http://yoursite.com/2017/09/08/LeetCode-刷题记录-（一）/index.html">
 <meta property="og:site_name" content="Megrez">
-<meta property="og:description" content="merge-k-sorted-lists https://leetcode.com/problems/merge-k-sorted-lists/description/  题意 Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给定k个已排序（升序）">
+<meta property="og:description" content="merge-k-sorted-lists  https://leetcode.com/problems/merge-k-sorted-lists/description/  题意  Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-09-13T09:08:05.541Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode 刷题记录 （一）">
-<meta name="twitter:description" content="merge-k-sorted-lists https://leetcode.com/problems/merge-k-sorted-lists/description/  题意 Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给定k个已排序（升序）">
+<meta name="twitter:description" content="merge-k-sorted-lists  https://leetcode.com/problems/merge-k-sorted-lists/description/  题意  Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给">
 
 
 
@@ -340,17 +340,22 @@
       
 
       
-        <h1 id="merge-k-sorted-lists"><a href="#merge-k-sorted-lists" class="headerlink" title="merge-k-sorted-lists"></a>merge-k-sorted-lists</h1><blockquote>
-<p><a href="https://leetcode.com/problems/merge-k-sorted-lists/description/" target="_blank" rel="external">https://leetcode.com/problems/merge-k-sorted-lists/description/</a></p>
+        <h1 id="merge-k-sorted-lists">merge-k-sorted-lists</h1>
+<blockquote>
+<p>https://leetcode.com/problems/merge-k-sorted-lists/description/</p>
 </blockquote>
-<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><blockquote>
+<h2 id="题意">题意</h2>
+<blockquote>
 <p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
 </blockquote>
 <p>给定k个已排序（升序）的链表，将他们合成为一个大的已排序链表。</p>
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>当<code>k=2</code>时就是一个典型的<code>Merge Sort</code>的情况，在这时就只需要每次比较两个待归并链表的首项并把较小的那一项加到新的已排序链表的尾部即可。</p>
+<h2 id="解题思路">解题思路</h2>
+<p>当<code>k=2</code>时就是一个典型的<code>Merge Sort</code>的情况，在这时就只需要每次比较两个待归并链表的首项并把较小的那一项加到新的已排序链表的尾部即可。</p>
 <p>扩展到k路归并的话，思路同样是取k个待归并列表的首项并将最小的一项加到结果链表的尾部。对于比较k个首项的大小并获得最小项的过程，我们可以维护一个由所有链表头组成的最小堆（直接用<code>algorithm</code>库的<code>make_heap</code> <code>push_heap</code> <code>pop_heap</code> 完成，省去自己实现），这样每次得到最小项所需的复杂度为<code>O(1)</code> ，添加删除堆节点的复杂度为<code>O(logK)</code> 。最终的复杂度为<code>O(NlogK)</code>，其中N为k个链表的总节点数。</p>
-<h2 id="坑点"><a href="#坑点" class="headerlink" title="坑点"></a>坑点</h2><p>会给空链表，即输入的vector中会有NULL项。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for singly-linked list.</span></div><div class="line"><span class="comment"> * struct ListNode &#123;</span></div><div class="line"><span class="comment"> *     int val;</span></div><div class="line"><span class="comment"> *     ListNode *next;</span></div><div class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">ListNode* <span class="title">mergeKLists</span><span class="params">(<span class="built_in">vector</span>&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;</div><div class="line">        <span class="keyword">auto</span> head = <span class="keyword">new</span> ListNode(<span class="number">0</span>), tail = head;</div><div class="line">        <span class="built_in">vector</span>&lt;ListNode*&gt; heap;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = lists.begin(); it != lists.end(); it++) &#123;</div><div class="line">            <span class="keyword">auto</span> node = *it;</div><div class="line">            <span class="keyword">if</span> (node) heap.push_back(node);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">auto</span> comp = [](ListNode* a, ListNode* b) &#123;</div><div class="line">            <span class="keyword">return</span> a-&gt;val &gt; b-&gt;val;</div><div class="line">        &#125;;</div><div class="line">        make_heap(heap.begin(), heap.end(), comp);</div><div class="line">        <span class="keyword">while</span> (heap.size()) &#123;</div><div class="line">            pop_heap(heap.begin(), heap.end(), comp);</div><div class="line">            ListNode* selected = heap.back();</div><div class="line">            heap.pop_back();</div><div class="line">            tail = tail-&gt;next = <span class="keyword">new</span> ListNode(selected-&gt;val);</div><div class="line">            <span class="keyword">if</span> (selected-&gt;next) &#123;</div><div class="line">                heap.push_back(selected-&gt;next);</div><div class="line">                push_heap(heap.begin(), heap.end(), comp);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> head-&gt;next;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="坑点">坑点</h2>
+<p>会给空链表，即输入的vector中会有NULL项。</p>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Definition for singly-linked list.</span></div><div class="line"><span class="comment"> * struct ListNode &#123;</span></div><div class="line"><span class="comment"> *     int val;</span></div><div class="line"><span class="comment"> *     ListNode *next;</span></div><div class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">ListNode* <span class="title">mergeKLists</span><span class="params">(<span class="built_in">vector</span>&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;</div><div class="line">        <span class="keyword">auto</span> head = <span class="keyword">new</span> ListNode(<span class="number">0</span>), tail = head;</div><div class="line">        <span class="built_in">vector</span>&lt;ListNode*&gt; heap;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = lists.begin(); it != lists.end(); it++) &#123;</div><div class="line">            <span class="keyword">auto</span> node = *it;</div><div class="line">            <span class="keyword">if</span> (node) heap.push_back(node);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">auto</span> comp = [](ListNode* a, ListNode* b) &#123;</div><div class="line">            <span class="keyword">return</span> a-&gt;val &gt; b-&gt;val;</div><div class="line">        &#125;;</div><div class="line">        make_heap(heap.begin(), heap.end(), comp);</div><div class="line">        <span class="keyword">while</span> (heap.size()) &#123;</div><div class="line">            pop_heap(heap.begin(), heap.end(), comp);</div><div class="line">            ListNode* selected = heap.back();</div><div class="line">            heap.pop_back();</div><div class="line">            tail = tail-&gt;next = <span class="keyword">new</span> ListNode(selected-&gt;val);</div><div class="line">            <span class="keyword">if</span> (selected-&gt;next) &#123;</div><div class="line">                heap.push_back(selected-&gt;next);</div><div class="line">                push_heap(heap.begin(), heap.end(), comp);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> head-&gt;next;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -470,7 +475,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -731,6 +736,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 
