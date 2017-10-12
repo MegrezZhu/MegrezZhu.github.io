@@ -273,6 +273,146 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/在Hexo中使用数学公式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhu Chu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Megrez">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/12/在Hexo中使用数学公式/" itemprop="url">在Hexo中使用数学公式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-12T12:17:15+08:00">
+                2017-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>之前在写LeetCode解题报告的时候总是不可避免地要通过一些比较数学的方式来描述题解，原本认为Hexo自带的Markdown Renderer不支持公式渲染于是就用代码块将就了。后来越写越不能忍受，才下定决定一定要把公式功能加上。</p>
+<blockquote>
+<p><span class="math inline">\(A_{i,j}\)</span>比<code>A[i][j]</code>酷多了啊！</p>
+</blockquote>
+<hr>
+<p>在查解决方案的时候发现很幸运地，现在我在用的主题<a href="theme-next.iissnan.com">Next</a>其实已经集成了<em>MathJax</em>，只需要在<code>themes/next/_config.yml</code>里面把对应设置项打开就行了：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># MathJax Support</span></div><div class="line"><span class="attr">mathjax:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  per_page:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  cdn:</span> <span class="string">//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span></div></pre></td></tr></table></figure>
+<p>刷新之后发现的确已经能显示数学公式了，但在需要用到下标的时候（例如打算使用<code>$A_i$</code>得到<span class="math inline">\(A_i\)</span>），里面的下划线会和Markdown语法中的<code>_斜体_</code>语法冲突，也就是说，一旦有<code>$A_i$一些其他的文本$B_i$</code>这样的情况出现，里面的两个<code>_</code>会匹配成为Markdown的斜体标记，公式就渲染出错了。</p>
+<blockquote>
+<p>一个Naive的解决方案就是在每一个下划线前面加转义符，也就是用<code>\_</code>替代<code>_</code>，这样能防止被解析成斜体</p>
+</blockquote>
+<p>但这实在是太麻烦了，谁想每次在写公式下标的时候都加个斜杠呢。</p>
+<hr>
+<p>后来找到了一个几乎完美的解决方案：修改Hexo渲染Markdown时用的渲染引擎！</p>
+<p>在<code>package.json</code>里能看到Hexo原本用的是<code>hexo-renderer-marked</code>，把它换成<code>hexo-renderer-pandoc</code>即可。</p>
+<blockquote>
+<p><a href="https://pandoc.org" target="_blank" rel="external">Pandoc</a>是一个十分强大的开源格式转换工具。</p>
+<p><code>hexo-renderer-pandoc</code>通过调用系统中的Pandoc来渲染Markdown，因此需要先在系统中安装Pandoc才能正常使用</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm rm hexo-renderer-marked</div><div class="line">npm i hexo-renderer-pandoc</div></pre></td></tr></table></figure>
+<p>完美解决公式渲染问题，能在博客里面爽用MathJax写公式了（唯一的缺点是需要额外安装Pandoc，不能直接<code>npm i</code>解决所有依赖问题，但这又何妨呢）。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/LeetCode-刷题记录-（五）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1137,7 +1277,7 @@ F_{m,n}=max\{0, -A_{m,n}\}
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1150,7 +1290,7 @@ F_{m,n}=max\{0, -A_{m,n}\}
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

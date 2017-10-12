@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="LeetCode," />
+  <meta name="keywords" content="乱讲,Hexo," />
 
 
 
@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="Interleaving String  https://leetcode.com/problems/interleaving-string/description/  题意 给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。 比如&amp;quot;abc&amp;quot;就是由&amp;quot;ac&amp;quot;与&amp;quot;b&amp;quot;交错构成的，而&amp;quot;cab&amp;quot;不">
-<meta name="keywords" content="LeetCode">
+<meta name="description" content="之前在写LeetCode解题报告的时候总是不可避免地要通过一些比较数学的方式来描述题解，原本认为Hexo自带的Markdown Renderer不支持公式渲染于是就用代码块将就了。后来越写越不能忍受，才下定决定一定要把公式功能加上。  \(A_{i,j}\)比A[i][j]酷多了啊！   在查解决方案的时候发现很幸运地，现在我在用的主题Next其实已经集成了MathJax，只需要在the">
+<meta name="keywords" content="乱讲,Hexo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode-刷题记录（三）">
-<meta property="og:url" content="http://yoursite.com/2017/09/20/LeetCode-刷题记录-（三）/index.html">
+<meta property="og:title" content="在Hexo中使用数学公式">
+<meta property="og:url" content="http://yoursite.com/2017/10/12/在Hexo中使用数学公式/index.html">
 <meta property="og:site_name" content="Megrez">
-<meta property="og:description" content="Interleaving String  https://leetcode.com/problems/interleaving-string/description/  题意 给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。 比如&amp;quot;abc&amp;quot;就是由&amp;quot;ac&amp;quot;与&amp;quot;b&amp;quot;交错构成的，而&amp;quot;cab&amp;quot;不">
+<meta property="og:description" content="之前在写LeetCode解题报告的时候总是不可避免地要通过一些比较数学的方式来描述题解，原本认为Hexo自带的Markdown Renderer不支持公式渲染于是就用代码块将就了。后来越写越不能忍受，才下定决定一定要把公式功能加上。  \(A_{i,j}\)比A[i][j]酷多了啊！   在查解决方案的时候发现很幸运地，现在我在用的主题Next其实已经集成了MathJax，只需要在the">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-20T03:23:52.351Z">
+<meta property="og:updated_time" content="2017-10-12T05:11:33.803Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeetCode-刷题记录（三）">
-<meta name="twitter:description" content="Interleaving String  https://leetcode.com/problems/interleaving-string/description/  题意 给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。 比如&amp;quot;abc&amp;quot;就是由&amp;quot;ac&amp;quot;与&amp;quot;b&amp;quot;交错构成的，而&amp;quot;cab&amp;quot;不">
+<meta name="twitter:title" content="在Hexo中使用数学公式">
+<meta name="twitter:description" content="之前在写LeetCode解题报告的时候总是不可避免地要通过一些比较数学的方式来描述题解，原本认为Hexo自带的Markdown Renderer不支持公式渲染于是就用代码块将就了。后来越写越不能忍受，才下定决定一定要把公式功能加上。  \(A_{i,j}\)比A[i][j]酷多了啊！   在查解决方案的时候发现很幸运地，现在我在用的主题Next其实已经集成了MathJax，只需要在the">
 
 
 
@@ -134,14 +134,14 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/20/LeetCode-刷题记录-（三）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/12/在Hexo中使用数学公式/"/>
 
 
 
 <link href="/css/custom.css" rel="stylesheet">
 
 
-  <title>LeetCode-刷题记录（三） | Megrez</title>
+  <title>在Hexo中使用数学公式 | Megrez</title>
   
 
 
@@ -273,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/LeetCode-刷题记录-（三）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/在Hexo中使用数学公式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zhu Chu">
@@ -290,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LeetCode-刷题记录（三）</h1>
+          <h1 class="post-title" itemprop="name headline">在Hexo中使用数学公式</h1>
         
 
         <div class="post-meta">
@@ -302,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-20T10:53:18+08:00">
-                2017-09-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-12T12:17:15+08:00">
+                2017-10-12
               </time>
             
 
@@ -340,19 +340,27 @@
       
 
       
-        <h1 id="interleaving-string">Interleaving String</h1>
+        <p>之前在写LeetCode解题报告的时候总是不可避免地要通过一些比较数学的方式来描述题解，原本认为Hexo自带的Markdown Renderer不支持公式渲染于是就用代码块将就了。后来越写越不能忍受，才下定决定一定要把公式功能加上。</p>
 <blockquote>
-<p>https://leetcode.com/problems/interleaving-string/description/</p>
+<p><span class="math inline">\(A_{i,j}\)</span>比<code>A[i][j]</code>酷多了啊！</p>
 </blockquote>
-<h2 id="题意">题意</h2>
-<p>给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。</p>
-<p>比如<code>&quot;abc&quot;</code>就是由<code>&quot;ac&quot;</code>与<code>&quot;b&quot;</code>交错构成的，而<code>&quot;cab&quot;</code>不是。</p>
-<h2 id="思路">思路</h2>
-<p>用类似动态规划的思路，<code>dp[i][j]</code>表示是否存在一个交错方式使得<code>s1</code>的前<code>i</code>位与<code>s2</code>的前<code>j</code>位交错能够生成<code>s3</code>的前<code>i+j</code>位。</p>
-<p>于是有这样的状态关系：<code>dp[i][j] = (dp[i-1][j] &amp;&amp; s1[i] == s3[i+j]) || (dp[i][j-1] &amp;&amp; d2[j] == s3[i+j])</code>。</p>
-<p>实现一下递推就好了，一般可以用记忆化或者类似BFS的递推形式，下面我用的是后一种方法。</p>
-<h2 id="代码">代码</h2>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isInterleave</span><span class="params">(<span class="built_in">string</span> s1, <span class="built_in">string</span> s2, <span class="built_in">string</span> s3)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (s1.size() + s2.size() != s3.size()) <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;&gt; dp;</div><div class="line">        dp.resize(s1.size() + <span class="number">1</span>);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = dp.begin(); it != dp.end(); it++) it-&gt;resize(s2.size() + <span class="number">1</span>, <span class="literal">false</span>);</div><div class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</div><div class="line"></div><div class="line">        <span class="built_in">list</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; li = &#123; &#123;<span class="number">0</span>, <span class="number">0</span>&#125; &#125;;</div><div class="line">        <span class="keyword">while</span> (!li.empty()) &#123;</div><div class="line">            <span class="keyword">auto</span> p = li.front();</div><div class="line">            li.pop_front();</div><div class="line">            dp[p.first][p.second] = <span class="literal">true</span>;</div><div class="line">            <span class="keyword">if</span> (p.first + p.second + <span class="number">1</span> &gt; s3.size()) <span class="keyword">continue</span>;</div><div class="line">            <span class="keyword">char</span> next = s3[p.first + p.second];</div><div class="line">            <span class="keyword">if</span> (p.first &lt; s1.size() &amp;&amp; s1[p.first] == next) &#123;</div><div class="line">                <span class="keyword">if</span> (!dp[p.first + <span class="number">1</span>][p.second]) &#123;</div><div class="line">                    dp[p.first + <span class="number">1</span>][p.second] = <span class="literal">true</span>;</div><div class="line">                    li.push_back(&#123; p.first + <span class="number">1</span>, p.second &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (p.second &lt; s2.size() &amp;&amp; s2[p.second] == next) &#123;</div><div class="line">                <span class="keyword">if</span> (!dp[p.first][p.second + <span class="number">1</span>]) &#123;</div><div class="line">                    dp[p.first][p.second + <span class="number">1</span>] = <span class="literal">true</span>;</div><div class="line">                    li.push_back(&#123; p.first, p.second + <span class="number">1</span> &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> dp[s1.size()][s2.size()];</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<hr>
+<p>在查解决方案的时候发现很幸运地，现在我在用的主题<a href="theme-next.iissnan.com">Next</a>其实已经集成了<em>MathJax</em>，只需要在<code>themes/next/_config.yml</code>里面把对应设置项打开就行了：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># MathJax Support</span></div><div class="line"><span class="attr">mathjax:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  per_page:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  cdn:</span> <span class="string">//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span></div></pre></td></tr></table></figure>
+<p>刷新之后发现的确已经能显示数学公式了，但在需要用到下标的时候（例如打算使用<code>$A_i$</code>得到<span class="math inline">\(A_i\)</span>），里面的下划线会和Markdown语法中的<code>_斜体_</code>语法冲突，也就是说，一旦有<code>$A_i$一些其他的文本$B_i$</code>这样的情况出现，里面的两个<code>_</code>会匹配成为Markdown的斜体标记，公式就渲染出错了。</p>
+<blockquote>
+<p>一个Naive的解决方案就是在每一个下划线前面加转义符，也就是用<code>\_</code>替代<code>_</code>，这样能防止被解析成斜体</p>
+</blockquote>
+<p>但这实在是太麻烦了，谁想每次在写公式下标的时候都加个斜杠呢。</p>
+<hr>
+<p>后来找到了一个几乎完美的解决方案：修改Hexo渲染Markdown时用的渲染引擎！</p>
+<p>在<code>package.json</code>里能看到Hexo原本用的是<code>hexo-renderer-marked</code>，把它换成<code>hexo-renderer-pandoc</code>即可。</p>
+<blockquote>
+<p><a href="https://pandoc.org" target="_blank" rel="external">Pandoc</a>是一个十分强大的开源格式转换工具。</p>
+<p><code>hexo-renderer-pandoc</code>通过调用系统中的Pandoc来渲染Markdown，因此需要先在系统中安装Pandoc才能正常使用</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm rm hexo-renderer-marked</div><div class="line">npm i hexo-renderer-pandoc</div></pre></td></tr></table></figure>
+<p>完美解决公式渲染问题，能在博客里面爽用MathJax写公式了（唯一的缺点是需要额外安装Pandoc，不能直接<code>npm i</code>解决所有依赖问题，但这又何妨呢）。</p>
 
       
     </div>
@@ -370,7 +378,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/LeetCode/" rel="tag"># LeetCode</a>
+            <a href="/tags/乱讲/" rel="tag"># 乱讲</a>
+          
+            <a href="/tags/Hexo/" rel="tag"># Hexo</a>
           
         </div>
       
@@ -383,8 +393,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/12/LeetCode-刷题记录-（二）/" rel="next" title="LeetCode 刷题记录 （二）">
-                <i class="fa fa-chevron-left"></i> LeetCode 刷题记录 （二）
+              <a href="/2017/10/11/LeetCode-刷题记录-（五）/" rel="next" title="LeetCode 刷题记录 （五）">
+                <i class="fa fa-chevron-left"></i> LeetCode 刷题记录 （五）
               </a>
             
           </div>
@@ -392,10 +402,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/27/LeetCode-刷题记录-（四）/" rel="prev" title="LeetCode 刷题记录 （四）">
-                LeetCode 刷题记录 （四） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -447,17 +453,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -545,22 +542,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#interleaving-string"><span class="nav-number">1.</span> <span class="nav-text">Interleaving String</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题意"><span class="nav-number">1.1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.3.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
