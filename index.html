@@ -273,6 +273,167 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/13/LeetCode-刷题记录-（六）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhu Chu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Megrez">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/13/LeetCode-刷题记录-（六）/" itemprop="url">LeetCode 刷题记录 （六）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-13T15:19:51+08:00">
+                2017-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="candy">Candy</h1>
+<blockquote>
+<p>https://leetcode.com/problems/candy/description/</p>
+</blockquote>
+<h2 id="题意">题意</h2>
+<p><span class="math inline">\(N\)</span>个小朋友站成一行，每个小朋友有一个评级<span class="math inline">\(R_i\)</span>。现在要给每个小朋友派发糖果，第<span class="math inline">\(i\)</span>个小朋友得到的糖果的数量<span class="math inline">\(C_i\)</span>须满足如下条件：</p>
+<ul>
+<li><span class="math inline">\(C_i\ge1\)</span></li>
+<li>对于<span class="math inline">\(|i-j|=1\)</span>，如果<span class="math inline">\(R_i&gt;R_j\)</span>，则<span class="math inline">\(C_i&gt;C_j\)</span></li>
+</ul>
+<p>计算最少需要的糖果总数。</p>
+<h2 id="思路">思路</h2>
+<p>根据要求递归计算即可，加上记忆化防止重复计算。时间复杂度为<span class="math inline">\(\mathcal{O}(N)\)</span>。</p>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ratings;</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">calculate</span><span class="params">(<span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (pos &lt; <span class="number">0</span> || pos &gt;= res.size()) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span> (res[pos] != <span class="number">-1</span>) <span class="keyword">return</span> res[pos];</div><div class="line">        <span class="keyword">int</span> left = get(pos - <span class="number">1</span>) &lt; get(pos) ? calculate(pos - <span class="number">1</span>) : <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> right = get(pos + <span class="number">1</span>) &lt; get(pos) ? calculate(pos + <span class="number">1</span>) : <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> res[pos] = max(left, right) + <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (pos &lt; <span class="number">0</span> || pos &gt;= ratings.size()) ? <span class="number">1e9</span> : ratings[pos];</div><div class="line">    &#125;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">candy</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; ratings)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>-&gt;ratings = ratings;</div><div class="line">        res.clear();</div><div class="line">        res.resize(ratings.size(), <span class="number">-1</span>);</div><div class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; res.size(); i++) ans += calculate(i);</div><div class="line">        <span class="keyword">return</span> ans;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="maximum-subarray">Maximum Subarray</h1>
+<h2 id="题意-1">题意</h2>
+<p>给定一个数组<span class="math inline">\(A\)</span>，求它的最大子段和。</p>
+<h2 id="思路-1">思路</h2>
+<p>经典的DP题。</p>
+<p><span class="math inline">\(F_i\)</span>表示以<span class="math inline">\(A_i\)</span>结尾的所有子段中能够得到的最大字段和，于是有： <span class="math display">\[
+F_i=\max\{F_{i-1},0\}+A_i
+\]</span> 初始有<span class="math inline">\(F_0=A_0\)</span>。</p>
+<p>时间复杂度为<span class="math inline">\(\mathcal{O}(N)\)</span>，<span class="math inline">\(N\)</span>为数组中元素个数。</p>
+<h2 id="代码-1">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; f;</div><div class="line">        f.resize(nums.size());</div><div class="line">        f[<span class="number">0</span>] = nums[<span class="number">0</span>];</div><div class="line">        <span class="keyword">int</span> ans = f[<span class="number">0</span>];</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.size(); i++) &#123;</div><div class="line">            f[i] = max(f[i - <span class="number">1</span>], <span class="number">0</span>) + nums[i];</div><div class="line">            ans = max(ans, f[i]);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> ans;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="find-median-from-data-stream">Find Median from Data Stream</h1>
+<blockquote>
+<p>https://leetcode.com/problems/find-median-from-data-stream/description/</p>
+</blockquote>
+<h2 id="题意-2">题意</h2>
+<p>要求实现一个容器类，能够：</p>
+<ul>
+<li>将一个元素加入容器中</li>
+<li>计算当前容器中所有元素的中位数</li>
+</ul>
+<h2 id="思路-2">思路</h2>
+<p>维护两个堆，大根堆<span class="math inline">\(H_1\)</span>和小根堆<span class="math inline">\(H_2\)</span>，<span class="math inline">\(H_1\)</span>里面是当前容器中最小的<span class="math inline">\(\lfloor\frac{N+1}{2}\rfloor\)</span>个元素，相应的<span class="math inline">\(H_2\)</span>里面是当前容器中最大的<span class="math inline">\(N-\lfloor\frac{N+1}{2}\rfloor\)</span>个元素。在有新元素加入时处理一下新元素和两个堆的根元素之间的移动关系即可，具体处理逻辑见下面代码。</p>
+<p>在<span class="math inline">\(N\)</span>为奇数时，中位数就是<span class="math inline">\(H_1\)</span>的根；否则中位数是两个堆的根的均值。</p>
+<p>时间复杂度：添加元素<span class="math inline">\(\mathcal{O}(\log N)\)</span>，计算当前中位数<span class="math inline">\(\mathcal{O}(1)\)</span>。</p>
+<h2 id="代码-2">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MedianFinder</span> &#123;</span></div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; left, right;</div><div class="line">    <span class="keyword">int</span> size;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">/** initialize your data structure here. */</span></div><div class="line">    MedianFinder() &#123;</div><div class="line">        size = <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addNum</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</div><div class="line">        size++;</div><div class="line">        <span class="keyword">int</span> leftCap = (size + <span class="number">1</span>) / <span class="number">2</span>, rightCap = size - leftCap;</div><div class="line">        <span class="keyword">if</span> (left.size() &lt; leftCap) &#123;</div><div class="line">            <span class="keyword">int</span> toLeft;</div><div class="line">            <span class="keyword">if</span> (right.size() == <span class="number">0</span> || num &lt;= right.front()) &#123;</div><div class="line">                toLeft = num;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                toLeft = right.front();</div><div class="line">                pop_heap(right.begin(), right.end(), greater&lt;<span class="keyword">int</span>&gt;());</div><div class="line">                right.pop_back();</div><div class="line">                right.push_back(num);</div><div class="line">                push_heap(right.begin(), right.end(), greater&lt;<span class="keyword">int</span>&gt;());</div><div class="line">            &#125;</div><div class="line">            left.push_back(toLeft);</div><div class="line">            push_heap(left.begin(), left.end());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">int</span> toRight;</div><div class="line">            <span class="keyword">if</span> (left.size() == <span class="number">0</span> || num &gt;= left.front()) &#123;</div><div class="line">                toRight = num;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                toRight = left.front();</div><div class="line">                pop_heap(left.begin(), left.end());</div><div class="line">                left.pop_back();</div><div class="line">                left.push_back(num);</div><div class="line">                push_heap(left.begin(), left.end());</div><div class="line">            &#125;</div><div class="line">            right.push_back(toRight);</div><div class="line">            push_heap(right.begin(), right.end(), greater&lt;<span class="keyword">int</span>&gt;());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">double</span> <span class="title">findMedian</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (size % <span class="number">2</span>) <span class="keyword">return</span> left.front();</div><div class="line">        <span class="keyword">else</span> <span class="keyword">return</span> (left.front() + right.front()) / <span class="number">2.0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/在Hexo中使用数学公式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1277,7 +1438,7 @@ F_{m-1,n-1}=max\{0, -A_{m-1,n-1}\}
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
