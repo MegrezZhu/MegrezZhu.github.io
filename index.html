@@ -273,6 +273,163 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/18/LeetCode-刷题记录-（七）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhu Chu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Megrez">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/18/LeetCode-刷题记录-（七）/" itemprop="url">LeetCode 刷题记录 （七）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-18T20:57:18+08:00">
+                2017-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="binary-tree-maximum-path-sum">Binary Tree Maximum Path Sum</h1>
+<blockquote>
+<p>https://leetcode.com/problems/binary-tree-maximum-path-sum/description/</p>
+</blockquote>
+<h2 id="题意">题意</h2>
+<p>给定一棵二叉树，二叉树上每个节点有一个整数权值。求在这棵二叉树上经过的节点的权值和最长的路径的权值和大小（路径至少经过一个节点）。</p>
+<h2 id="思路">思路</h2>
+<p>对于一棵二叉树，上面的所有路径其实可以分为以下几种：</p>
+<ol style="list-style-type: decimal">
+<li>只经过左子树中的节点</li>
+<li>只经过右子树中的节点</li>
+<li>只经过左子树中的节点和根</li>
+<li>只经过右子树中的节点和根</li>
+<li>左右子树节点和根都经过</li>
+</ol>
+<p>很显然，第五种路径其实是第三、四种路径和根节点的组合；另外几种路径也和对应的子树的子树的某几种路径相关。</p>
+<p>于是就可以递归计算，对每个节点分别计算在相应子树中五种路径的最大权值和即可。</p>
+<h2 id="代码">代码</h2>
+<p>LeetCode直接提供了<code>TreeNode</code>的定义：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* Definition for a binary tree node.</span></div><div class="line"><span class="comment">* struct TreeNode &#123;</span></div><div class="line"><span class="comment">*     int val;</span></div><div class="line"><span class="comment">*     TreeNode *left;</span></div><div class="line"><span class="comment">*     TreeNode *right;</span></div><div class="line"><span class="comment">*     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span></div><div class="line"><span class="comment">* &#125;;</span></div><div class="line"><span class="comment">*/</span></div></pre></td></tr></table></figure>
+<p>但上面挂载的信息还太少，又不能修改这个定义，于是只能新创建一个结构<code>SolNode</code>，添加一些成员，通过<code>TreeNode</code>进行构造。</p>
+<p>因为<code>SolNode</code>在构造的时候会递归地对左右子树进行构造，正好和解题的顺序一样，所以干脆把解题过程也写在<code>SolNode</code>的构造函数里了。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SolNode</span> &#123;</span></div><div class="line">    <span class="keyword">int</span> val, leftMax, rightMax, midMax, ansMax;</div><div class="line">    <span class="keyword">bool</span> allNeg;</div><div class="line">    <span class="keyword">int</span> maxVal;</div><div class="line">    SolNode *left, *right;</div><div class="line">    SolNode(TreeNode *node) &#123;</div><div class="line">        <span class="keyword">if</span> (!node) &#123;</div><div class="line">            ansMax = midMax = leftMax = rightMax = <span class="number">0</span>;</div><div class="line">            allNeg = <span class="literal">true</span>;</div><div class="line">            maxVal = <span class="number">-2e9</span>;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        left = <span class="keyword">new</span> SolNode(node-&gt;left);</div><div class="line">        right = <span class="keyword">new</span> SolNode(node-&gt;right);</div><div class="line">        val = node-&gt;val;</div><div class="line">        leftMax = val + max(max(left-&gt;leftMax, left-&gt;rightMax), <span class="number">0</span>);</div><div class="line">        rightMax = val + max(max(right-&gt;leftMax, right-&gt;rightMax), <span class="number">0</span>);</div><div class="line">        midMax = leftMax + rightMax - val;</div><div class="line">        <span class="keyword">int</span> t1 = max(left-&gt;ansMax, right-&gt;ansMax);</div><div class="line">        <span class="keyword">int</span> t2 = max(leftMax, rightMax);</div><div class="line">        ansMax = max(max(t1, t2), midMax);</div><div class="line">        maxVal = max(max(left-&gt;maxVal, right-&gt;maxVal), val);</div><div class="line">        allNeg = left-&gt;allNeg &amp;&amp; right-&gt;allNeg &amp;&amp; val &lt; <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">maxPathSum</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">        <span class="keyword">auto</span> solNode = <span class="keyword">new</span> SolNode(root);</div><div class="line">        <span class="keyword">return</span> solNode-&gt;allNeg ? solNode-&gt;maxVal : solNode-&gt;ansMax;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="minimum-window-substring">Minimum Window Substring</h1>
+<blockquote>
+<p>https://leetcode.com/problems/minimum-window-substring/description/</p>
+</blockquote>
+<h2 id="题意-1">题意</h2>
+<p>给定两个字符串<span class="math inline">\(S\)</span>和<span class="math inline">\(T\)</span>（题目没说，假设由<em>ascii</em>从0-255的字符都有可能出现），求<span class="math inline">\(S\)</span>的最短子串<span class="math inline">\(S&#39;\)</span>，使得<span class="math inline">\(T\)</span>中的每个字符在<span class="math inline">\(S&#39;\)</span>中都出现。</p>
+<p>Node: 如果字符<span class="math inline">\(c\)</span>在<span class="math inline">\(T\)</span>中出现多次，那么<span class="math inline">\(c\)</span>在<span class="math inline">\(S&#39;\)</span>中也应出现至少相同次数。</p>
+<p>输入保证这样的最短子串是唯一的。</p>
+<h2 id="思路-1">思路</h2>
+<p><del>其实题目标题中的<strong>Window</strong>就充满了暗示……</del></p>
+<p>用两个迭代器<span class="math inline">\(i\)</span>与<span class="math inline">\(pos\)</span>分别为指向满足要求的子串的头与尾（以下标0方向为尾）。</p>
+<p>在初始时<span class="math inline">\(pos=0\)</span>，<span class="math inline">\(i\)</span>不断增大直到<span class="math inline">\(S[0:i]\)</span>满足要求为止，此时<span class="math inline">\(S[0:i]\)</span>是一个满足要求的子串（不一定最短）。然后<span class="math inline">\(i\)</span>每次右移一位，记<span class="math inline">\(i^{&#39;}=i+1\)</span>，此时得到的新子串<span class="math inline">\(S[0:i^{&#39;}]\)</span>也必定满足要求，但由于这个子串的左端可能会有多余的、删掉也不妨碍子串满足要求的字符，于是一直右移<span class="math inline">\(pos\)</span>直到没有多余字符为止。</p>
+<p>具体实现见下面代码。</p>
+<h2 id="代码-1">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">    <span class="keyword">int</span> req[<span class="number">256</span>], meet[<span class="number">256</span>];</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="built_in">string</span> <span class="title">minWindow</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">string</span> t)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (s.length() &lt; t.length()) <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">        <span class="built_in">memset</span>(req, <span class="number">0</span>, <span class="number">256</span>);</div><div class="line">        <span class="built_in">memset</span>(meet, <span class="number">0</span>, <span class="number">256</span>);</div><div class="line">        <span class="keyword">int</span> unMeet = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> c : t) &#123;</div><div class="line">            <span class="keyword">if</span> (!req[c]) unMeet++;</div><div class="line">            req[c]++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> minLen = <span class="number">2e9</span>, minPos;</div><div class="line">        <span class="keyword">bool</span> ok = <span class="literal">false</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, pos = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</div><div class="line">            meet[s[i]]++;</div><div class="line">            <span class="keyword">if</span> (meet[s[i]] == req[s[i]]) &#123;</div><div class="line">                <span class="comment">// just meet</span></div><div class="line">                unMeet--;</div><div class="line">                <span class="keyword">if</span> (!unMeet) ok = <span class="literal">true</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">while</span> (meet[s[pos]] &gt; req[s[pos]]) meet[s[pos++]]--;</div><div class="line">            <span class="keyword">if</span> (ok &amp;&amp; i - pos + <span class="number">1</span> &lt; minLen) &#123;</div><div class="line">                minLen = i - pos + <span class="number">1</span>;</div><div class="line">                minPos = pos;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> ok ? s.substr(minPos, minLen) : <span class="string">""</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/13/LeetCode-刷题记录-（六）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -360,6 +517,9 @@
 <h2 id="代码">代码</h2>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ratings;</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">calculate</span><span class="params">(<span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (pos &lt; <span class="number">0</span> || pos &gt;= res.size()) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span> (res[pos] != <span class="number">-1</span>) <span class="keyword">return</span> res[pos];</div><div class="line">        <span class="keyword">int</span> left = get(pos - <span class="number">1</span>) &lt; get(pos) ? calculate(pos - <span class="number">1</span>) : <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> right = get(pos + <span class="number">1</span>) &lt; get(pos) ? calculate(pos + <span class="number">1</span>) : <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> res[pos] = max(left, right) + <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (pos &lt; <span class="number">0</span> || pos &gt;= ratings.size()) ? <span class="number">1e9</span> : ratings[pos];</div><div class="line">    &#125;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">candy</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; ratings)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>-&gt;ratings = ratings;</div><div class="line">        res.clear();</div><div class="line">        res.resize(ratings.size(), <span class="number">-1</span>);</div><div class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; res.size(); i++) ans += calculate(i);</div><div class="line">        <span class="keyword">return</span> ans;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <h1 id="maximum-subarray">Maximum Subarray</h1>
+<blockquote>
+<p>https://leetcode.com/problems/maximum-subarray/description/</p>
+</blockquote>
 <h2 id="题意-1">题意</h2>
 <p>给定一个数组<span class="math inline">\(A\)</span>，求它的最大子段和。</p>
 <h2 id="思路-1">思路</h2>
@@ -1438,7 +1598,7 @@ F_{m-1,n-1}=max\{0, -A_{m-1,n-1}\}
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
