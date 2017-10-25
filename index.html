@@ -273,6 +273,144 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/LeetCode-刷题记录-（八）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhu Chu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Megrez">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/LeetCode-刷题记录-（八）/" itemprop="url">LeetCode 刷题记录 （八）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T14:25:29+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="flatten-nested-list-iterator">Flatten Nested List Iterator</h1>
+<blockquote>
+<p>https://leetcode.com/problems/flatten-nested-list-iterator/description/</p>
+</blockquote>
+<h2 id="题意">题意</h2>
+<p>现在有一种新的嵌套数组类型，定义如下：</p>
+<ul>
+<li><code>NestedInteger</code>可以表示一个整数，也可以表示为一个<code>NestedInteger</code>的数组。</li>
+</ul>
+<p>现在要实现一个<code>NestedIterator</code>类，作为<code>NestedInteger</code>表示的嵌套数组的迭代器，它能够以该嵌套数组的“压平”后进行从左到右的迭代。</p>
+<p>比如一个嵌套数组<code>[1, [2, 3], 4, [5, [6]]]</code>，迭代顺序就是<code>1, 2, 3, 4, 5, 6</code>。</p>
+<h2 id="思路">思路</h2>
+<p>个人觉得这道题挺有意思的，比起算法，这题更像是一个语言题。</p>
+<p>在一些动态类型的语言中（比如Python和JavaScript），这个问题经常遇到也比较容易解决。但在C++里面就比较难写了。</p>
+<p>从嵌套数组的结构来分析，一个嵌套数组其实可以表示成一棵树，其中最底层的叶子节点就是各个整数元素，而非叶节点就是数组元素（空数组直接删掉不参与树的构建）。那么把这个嵌套数组压平的过程其实就是DFS的遍历过程。</p>
+<p>但这道题所求的并不止是压平数组的结果，它还要求实现一个迭代器。也就是说这样一个DFS的遍历过程不是一口气完成的，而是每次调用next()方法都向前走一步。这也就要求有一个栈结构来保存执行上下文，手动模拟递归过程。</p>
+<p>具体实现过程见代码。</p>
+<h2 id="代码">代码</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * // This is the interface that allows for creating nested lists.</span></div><div class="line"><span class="comment"> * // You should not implement it, or speculate about its implementation</span></div><div class="line"><span class="comment"> * class NestedInteger &#123;</span></div><div class="line"><span class="comment"> *   public:</span></div><div class="line"><span class="comment"> *     // Return true if this NestedInteger holds a single integer, rather than a nested list.</span></div><div class="line"><span class="comment"> *     bool isInteger() const;</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *     // Return the single integer that this NestedInteger holds, if it holds a single integer</span></div><div class="line"><span class="comment"> *     // The result is undefined if this NestedInteger holds a nested list</span></div><div class="line"><span class="comment"> *     int getInteger() const;</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *     // Return the nested list that this NestedInteger holds, if it holds a nested list</span></div><div class="line"><span class="comment"> *     // The result is undefined if this NestedInteger holds a single integer</span></div><div class="line"><span class="comment"> *     const vector&lt;NestedInteger&gt; &amp;getList() const;</span></div><div class="line"><span class="comment"> * &#125;;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">NestedIterator</span> &#123;</span></div><div class="line">    <span class="keyword">typedef</span> pair&lt;<span class="keyword">const</span> <span class="built_in">vector</span>&lt;NestedInteger&gt;*, <span class="built_in">vector</span>&lt;NestedInteger&gt;::const_iterator&gt; Context; <span class="comment">// second must be integer</span></div><div class="line">    <span class="built_in">stack</span>&lt;Context&gt; stk;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">decompose</span><span class="params">(<span class="keyword">const</span> NestedInteger &amp;ni)</span> </span>&#123;</div><div class="line">        <span class="keyword">auto</span> p = &amp;ni;</div><div class="line">        <span class="keyword">while</span> (!p-&gt;isInteger()) &#123;</div><div class="line">            <span class="keyword">auto</span>&amp; <span class="built_in">list</span> = p-&gt;getList();</div><div class="line">            <span class="keyword">if</span> (<span class="built_in">list</span>.size()) &#123;</div><div class="line">                <span class="comment">// ni not an empty list</span></div><div class="line">                <span class="keyword">auto</span> context = make_pair(&amp;<span class="built_in">list</span>, <span class="built_in">list</span>.begin());</div><div class="line">                stk.push(context);</div><div class="line">                p = &amp;*<span class="built_in">list</span>.begin();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCurrent</span><span class="params">()</span> </span>&#123;</div><div class="line">        skipNull();</div><div class="line">        <span class="keyword">auto</span> context = stk.top();</div><div class="line">        <span class="keyword">return</span> context.second-&gt;getInteger();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isEmptyList</span><span class="params">(<span class="keyword">const</span> NestedInteger &amp;ni)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> !ni.isInteger() &amp;&amp; ni.getList().empty();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">moveNext</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line">            stk.top().second++;</div><div class="line">            <span class="keyword">if</span> (stk.top().second == stk.top().first-&gt;end()) &#123;</div><div class="line">                stk.pop();</div><div class="line">                <span class="keyword">if</span> (stk.empty()) <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (!stk.empty()) decompose(*stk.top().second);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">skipNull</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span> (!stk.empty() &amp;&amp; isEmptyList(*stk.top().second)) moveNext();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    NestedIterator(<span class="built_in">vector</span>&lt;NestedInteger&gt; &amp;nestedList) &#123;</div><div class="line">        <span class="keyword">if</span> (nestedList.empty()) <span class="keyword">return</span>;</div><div class="line">        stk.push(make_pair(&amp;nestedList, nestedList.cbegin()));</div><div class="line">        decompose(nestedList.front());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> result = getCurrent();</div><div class="line"></div><div class="line">        moveNext();</div><div class="line"></div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</div><div class="line">        skipNull();</div><div class="line">        <span class="keyword">return</span> !stk.empty();</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Your NestedIterator object will be instantiated and called as such:</span></div><div class="line"><span class="comment"> * NestedIterator i(nestedList);</span></div><div class="line"><span class="comment"> * while (i.hasNext()) cout &lt;&lt; i.next();</span></div><div class="line"><span class="comment"> */</span></div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/18/LeetCode-刷题记录-（七）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1598,7 +1736,7 @@ F_{m-1,n-1}=max\{0, -A_{m-1,n-1}\}
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
