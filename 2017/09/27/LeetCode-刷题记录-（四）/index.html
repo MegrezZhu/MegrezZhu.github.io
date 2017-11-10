@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路 注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;">
+<meta name="description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。">
 <meta name="keywords" content="LeetCode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 刷题记录 （四）">
 <meta property="og:url" content="http://yoursite.com/2017/09/27/LeetCode-刷题记录-（四）/index.html">
 <meta property="og:site_name" content="Megrez">
-<meta property="og:description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路 注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;">
+<meta property="og:description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-27T07:06:44.818Z">
+<meta property="og:updated_time" content="2017-11-10T11:19:21.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode 刷题记录 （四）">
-<meta name="twitter:description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。 思路 注意到对于a[i]，如果存在j &amp;gt; i使得a[j] &amp;gt;">
+<meta name="twitter:description" content="Sliding Window Maximum  https://leetcode.com/problems/sliding-window-maximum/description/  题意 一个有n个数字的数组a，对于给定的k，对每一组连续的k个数组元素（即a[i...i+k-1] ），输出这k个元素中的最大值。">
 
 
 
@@ -351,6 +351,7 @@
 </blockquote>
 <h2 id="题意">题意</h2>
 <p>一个有<code>n</code>个数字的数组<code>a</code>，对于给定的<code>k</code>，对每一组连续的k个数组元素（即<code>a[i...i+k-1]</code> ），输出这k个元素中的最大值。</p>
+<a id="more"></a>
 <h2 id="思路">思路</h2>
 <p>注意到对于<code>a[i]</code>，如果存在<code>j &gt; i</code>使得<code>a[j] &gt;= a[i]</code>，那么对于所有末端位置大于等于<code>j</code>的k元组，<code>a[i]</code>都不可能会是这个k元组中的最大值，基于只可能出现以下几种情况：</p>
 <ul>

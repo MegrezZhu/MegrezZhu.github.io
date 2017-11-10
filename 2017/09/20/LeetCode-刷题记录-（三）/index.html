@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Megrez">
 <meta property="og:description" content="Interleaving String  https://leetcode.com/problems/interleaving-string/description/  题意 给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。 比如&amp;quot;abc&amp;quot;就是由&amp;quot;ac&amp;quot;与&amp;quot;b&amp;quot;交错构成的，而&amp;quot;cab&amp;quot;不">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-20T03:23:52.351Z">
+<meta property="og:updated_time" content="2017-11-10T11:18:58.990Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode-刷题记录（三）">
 <meta name="twitter:description" content="Interleaving String  https://leetcode.com/problems/interleaving-string/description/  题意 给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。 比如&amp;quot;abc&amp;quot;就是由&amp;quot;ac&amp;quot;与&amp;quot;b&amp;quot;交错构成的，而&amp;quot;cab&amp;quot;不">
@@ -352,6 +352,7 @@
 <h2 id="题意">题意</h2>
 <p>给定三个字符串s1、s2、s3，判断s3是否是由s1与s2交错构成。</p>
 <p>比如<code>&quot;abc&quot;</code>就是由<code>&quot;ac&quot;</code>与<code>&quot;b&quot;</code>交错构成的，而<code>&quot;cab&quot;</code>不是。</p>
+<a id="more"></a>
 <h2 id="思路">思路</h2>
 <p>用类似动态规划的思路，<code>dp[i][j]</code>表示是否存在一个交错方式使得<code>s1</code>的前<code>i</code>位与<code>s2</code>的前<code>j</code>位交错能够生成<code>s3</code>的前<code>i+j</code>位。</p>
 <p>于是有这样的状态关系：<code>dp[i][j] = (dp[i-1][j] &amp;&amp; s1[i] == s3[i+j]) || (dp[i][j-1] &amp;&amp; d2[j] == s3[i+j])</code>。</p>

@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Megrez">
 <meta property="og:description" content="Dungeon Game  https://leetcode.com/problems/dungeon-game/description/  题意 一个\(m\times n\)的矩阵当中，一个骑士从左上角走到右下角，只能向右或向下移动。骑士有初始血量\(H\)，矩阵的每一格中有一个数值\(A_{i,j}\)表示移动到这一格时对血量的增减，计算能保证不在任意时刻血量降至0以下的最小初始血">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-13T05:46:28.785Z">
+<meta property="og:updated_time" content="2017-11-10T11:19:54.589Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode 刷题记录 （五）">
 <meta name="twitter:description" content="Dungeon Game  https://leetcode.com/problems/dungeon-game/description/  题意 一个\(m\times n\)的矩阵当中，一个骑士从左上角走到右下角，只能向右或向下移动。骑士有初始血量\(H\)，矩阵的每一格中有一个数值\(A_{i,j}\)表示移动到这一格时对血量的增减，计算能保证不在任意时刻血量降至0以下的最小初始血">
@@ -351,6 +351,7 @@
 </blockquote>
 <h2 id="题意">题意</h2>
 <p>一个<span class="math inline">\(m\times n\)</span>的矩阵当中，一个骑士从左上角走到右下角，只能向右或向下移动。骑士有初始血量<span class="math inline">\(H\)</span>，矩阵的每一格中有一个数值<span class="math inline">\(A_{i,j}\)</span>表示移动到这一格时对血量的增减，计算能保证不在任意时刻血量降至0以下的最小初始血量<span class="math inline">\(H_{min}\)</span>。</p>
+<a id="more"></a>
 <h2 id="思路">思路</h2>
 <p>因为只能向右或下移动，因此避免了走回路的情况。记<span class="math inline">\(F_{i,j}\)</span>为走到以第<span class="math inline">\(i\)</span>行第<span class="math inline">\(j\)</span>列（从0开始）为起点，走到终点要求的最小初始血量。显然地，<span class="math inline">\(F_{i,j}\)</span>只与<span class="math inline">\(F_{i,j+1}\)</span>、<span class="math inline">\(F_{i+1,j}\)</span>以及<span class="math inline">\(A_{i,j}\)</span>相关。于是有下面的关系： <span class="math display">\[
 F_{i,j}=max\{0,-A_{i,j}+min\{F_{i,j+1},F_{i+1,j}\}\}

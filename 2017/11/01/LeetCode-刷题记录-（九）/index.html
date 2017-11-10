@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="K Inverse Pairs Array  https://leetcode.com/problems/k-inverse-pairs-array/description/  题意 给定\(n\)和\(k\)，计算由\(1\)到\(n\)的\(n\)个正整数组成的所有序列中，恰有\(k\)对逆序对的序列个数。（因为答案较大，因此只需计算答案模\(10^9+7\)的余数。 思路 考虑">
+<meta name="description" content="K Inverse Pairs Array  https://leetcode.com/problems/k-inverse-pairs-array/description/  题意 给定\(n\)和\(k\)，计算由\(1\)到\(n\)的\(n\)个正整数组成的所有序列中，恰有\(k\)对逆序对的序列个数。（因为答案较大，因此只需计算答案模\(10^9+7\)的余数。">
 <meta name="keywords" content="LeetCode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 刷题记录 （九）">
 <meta property="og:url" content="http://yoursite.com/2017/11/01/LeetCode-刷题记录-（九）/index.html">
 <meta property="og:site_name" content="Megrez">
-<meta property="og:description" content="K Inverse Pairs Array  https://leetcode.com/problems/k-inverse-pairs-array/description/  题意 给定\(n\)和\(k\)，计算由\(1\)到\(n\)的\(n\)个正整数组成的所有序列中，恰有\(k\)对逆序对的序列个数。（因为答案较大，因此只需计算答案模\(10^9+7\)的余数。 思路 考虑">
+<meta property="og:description" content="K Inverse Pairs Array  https://leetcode.com/problems/k-inverse-pairs-array/description/  题意 给定\(n\)和\(k\)，计算由\(1\)到\(n\)的\(n\)个正整数组成的所有序列中，恰有\(k\)对逆序对的序列个数。（因为答案较大，因此只需计算答案模\(10^9+7\)的余数。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-01T13:10:29.681Z">
+<meta property="og:updated_time" content="2017-11-10T11:18:36.581Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode 刷题记录 （九）">
-<meta name="twitter:description" content="K Inverse Pairs Array  https://leetcode.com/problems/k-inverse-pairs-array/description/  题意 给定\(n\)和\(k\)，计算由\(1\)到\(n\)的\(n\)个正整数组成的所有序列中，恰有\(k\)对逆序对的序列个数。（因为答案较大，因此只需计算答案模\(10^9+7\)的余数。 思路 考虑">
+<meta name="twitter:description" content="K Inverse Pairs Array  https://leetcode.com/problems/k-inverse-pairs-array/description/  题意 给定\(n\)和\(k\)，计算由\(1\)到\(n\)的\(n\)个正整数组成的所有序列中，恰有\(k\)对逆序对的序列个数。（因为答案较大，因此只需计算答案模\(10^9+7\)的余数。">
 
 
 
@@ -351,6 +351,7 @@
 </blockquote>
 <h2 id="题意">题意</h2>
 <p>给定<span class="math inline">\(n\)</span>和<span class="math inline">\(k\)</span>，计算由<span class="math inline">\(1\)</span>到<span class="math inline">\(n\)</span>的<span class="math inline">\(n\)</span>个正整数组成的所有序列中，恰有<span class="math inline">\(k\)</span>对逆序对的序列个数。（因为答案较大，因此只需计算答案模<span class="math inline">\(10^9+7\)</span>的余数。</p>
+<a id="more"></a>
 <h2 id="思路">思路</h2>
 <p>考虑一个这样的序列，它由<span class="math inline">\(1\)</span>~<span class="math inline">\(n_1\)</span>这<span class="math inline">\(n_1\)</span>个正整数组成。此时把一个<span class="math inline">\(n_1+1\)</span>插入序列中，显然得到的长为<span class="math inline">\(n_1+1\)</span>的新序列中的逆序对个数仅与原序列中的逆序对个数、还有插入的<span class="math inline">\(n_1+1\)</span>的位置有关（因为它比原序列中的任何数都大，因此在插入的位置后面的原序列当中的数字都会与<span class="math inline">\(n_1+1\)</span>形成一个新的逆序对）。</p>
 <p>于是得到状态转移： <span class="math display">\[

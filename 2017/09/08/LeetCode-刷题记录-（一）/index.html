@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Megrez">
 <meta property="og:description" content="merge-k-sorted-lists  https://leetcode.com/problems/merge-k-sorted-lists/description/  题意  Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-13T09:08:05.541Z">
+<meta property="og:updated_time" content="2017-11-10T11:18:52.480Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode 刷题记录 （一）">
 <meta name="twitter:description" content="merge-k-sorted-lists  https://leetcode.com/problems/merge-k-sorted-lists/description/  题意  Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.  给">
@@ -354,6 +354,7 @@
 <p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
 </blockquote>
 <p>给定k个已排序（升序）的链表，将他们合成为一个大的已排序链表。</p>
+<a id="more"></a>
 <h2 id="解题思路">解题思路</h2>
 <p>当<code>k=2</code>时就是一个典型的<code>Merge Sort</code>的情况，在这时就只需要每次比较两个待归并链表的首项并把较小的那一项加到新的已排序链表的尾部即可。</p>
 <p>扩展到k路归并的话，思路同样是取k个待归并列表的首项并将最小的一项加到结果链表的尾部。对于比较k个首项的大小并获得最小项的过程，我们可以维护一个由所有链表头组成的最小堆（直接用<code>algorithm</code>库的<code>make_heap</code> <code>push_heap</code> <code>pop_heap</code> 完成，省去自己实现），这样每次得到最小项所需的复杂度为<code>O(1)</code> ，添加删除堆节点的复杂度为<code>O(logK)</code> 。最终的复杂度为<code>O(NlogK)</code>，其中N为k个链表的总节点数。</p>
