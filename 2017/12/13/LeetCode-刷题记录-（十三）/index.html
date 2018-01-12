@@ -358,7 +358,7 @@ F_{i,j}=max(\{0\}\cup\{F_{i&#39;,j&#39;}|(i&#39;,j&#39;)\in D(i,j)\land A_{i,j}&
 \]</span> 本题与一维数组的最长上升子序列计算的一个重要区别在于：一个路径并不是简单地“从左到右”的。</p>
 <p>注意到上面的状态转移公式中，对于矩阵中的一个坐标<span class="math inline">\((i,j)\)</span>，为了计算<span class="math inline">\(F_{i,j}\)</span>，需要所有满足<span class="math inline">\((i&#39;,j&#39;)\in D(i,j)\land A_{i,j}&gt;A_{i&#39;,j&#39;}\)</span>的点（与<span class="math inline">\((i,j)\)</span>相邻且更小的点）的<span class="math inline">\(F\)</span>计算出来。于是就涉及到一个计算顺序的问题：我们需要按照<span class="math inline">\(A_{i,j}\)</span>升序顺序计算<span class="math inline">\(F_{i,j}\)</span>，而不是简单的（如一维数组问题中的）坐标顺序。</p>
 <p><strong>解决方案</strong></p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>首先当然可以<span class="math inline">\(O((mn)log_2(mn))\)</span>做一次排序后按照排序结果的顺序进行计算，但计算每个<span class="math inline">\(F_{i,j}\)</span>只需要<span class="math inline">\(O(1)\)</span>的复杂度，因此排序的速度已经成为整体复杂度的瓶颈。</li>
 <li>于是可以采用类似记忆化搜索的递归过程，记录每个<span class="math inline">\(F_{i,j}\)</span>是否已经计算，而当计算<span class="math inline">\(F_{i,j}\)</span>依赖的<span class="math inline">\(F_{i&#39;,j&#39;}\)</span>的结果并未被计算时进行递归计算、否则直接使用保存的值。这样整体复杂度降为了<span class="math inline">\(O(mn)\)</span>。</li>
 </ol>
@@ -604,8 +604,8 @@ F_{i,j}=max(\{0\}\cup\{F_{i&#39;,j&#39;}|(i&#39;,j&#39;)\in D(i,j)\land A_{i,j}&
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
