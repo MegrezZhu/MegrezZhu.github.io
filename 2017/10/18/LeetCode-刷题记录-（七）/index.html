@@ -354,7 +354,7 @@
 <a id="more"></a>
 <h2 id="思路">思路</h2>
 <p>对于一棵二叉树，上面的所有路径其实可以分为以下几种：</p>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li>只经过左子树中的节点</li>
 <li>只经过右子树中的节点</li>
 <li>只经过左子树中的节点和根</li>
@@ -378,7 +378,7 @@
 <p>Node: 如果字符<span class="math inline">\(c\)</span>在<span class="math inline">\(T\)</span>中出现多次，那么<span class="math inline">\(c\)</span>在<span class="math inline">\(S&#39;\)</span>中也应出现至少相同次数。</p>
 <p>输入保证这样的最短子串是唯一的。</p>
 <h2 id="思路-1">思路</h2>
-<p><del>其实题目标题中的<strong>Window</strong>就充满了暗示……</del></p>
+<p><del>其实题目标题中的<strong>Window</strong>就充满了暗示......</del></p>
 <p>用两个迭代器<span class="math inline">\(i\)</span>与<span class="math inline">\(pos\)</span>分别为指向满足要求的子串的头与尾（以下标0方向为尾）。</p>
 <p>在初始时<span class="math inline">\(pos=0\)</span>，<span class="math inline">\(i\)</span>不断增大直到<span class="math inline">\(S[0:i]\)</span>满足要求为止，此时<span class="math inline">\(S[0:i]\)</span>是一个满足要求的子串（不一定最短）。然后<span class="math inline">\(i\)</span>每次右移一位，记<span class="math inline">\(i^{&#39;}=i+1\)</span>，此时得到的新子串<span class="math inline">\(S[0:i^{&#39;}]\)</span>也必定满足要求，但由于这个子串的左端可能会有多余的、删掉也不妨碍子串满足要求的字符，于是一直右移<span class="math inline">\(pos\)</span>直到没有多余字符为止。</p>
 <p>具体实现见下面代码。</p>
@@ -455,6 +455,8 @@
 
           
   <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
     
   </div>
 
@@ -768,6 +770,24 @@
 
 
 
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c0d6ba65b31b4ba87346',
+      clientSecret: '2bb754d2cc0c494c6acded68b705fdc44fac9ca1',
+      repo: 'MegrezZhu.github.io',
+      owner: 'MegrezZhu',
+      admin: ['MegrezZhu'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
 
 
 

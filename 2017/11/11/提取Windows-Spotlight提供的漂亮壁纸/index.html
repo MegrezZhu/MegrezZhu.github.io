@@ -353,12 +353,18 @@
         <h2 id="windows-spotlight">Windows Spotlight</h2>
 <p>Windows Spotlight（在中文系统里叫Windows聚焦）是一个系统集成的Feature，可以在锁屏界面上显示不同的背景图像并且定期自动更新。与Bing首页的背景图片差不多，Windows Spotlight提供的壁纸的质量都比较高，因此我们经常会希望能把这些壁纸保存下来用作桌面壁纸。</p>
 <a id="more"></a>
-<p><img src="1.jpg"></p>
+<div class="figure">
+<img src="1.jpg">
+
+</div>
 <hr>
 <h2 id="naive的做法">Naive的做法</h2>
 <p>在Google上找了一些解决方案，其基本做法都是到这个路径中去提取：</p>
 <p><code>%localappdata%/Packages/Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy/LocalState/Assets</code></p>
-<p><img src="2.jpg"></p>
+<div class="figure">
+<img src="2.jpg">
+
+</div>
 <p>可以看到，在这个文件夹下的文件都是没有后缀名的，从文件大小上来看也不难发现仅有一部分的文件是图片。至于如何区分呢？一种比较Naive的方法是通过类似于<code>ren *.* *.jpg</code>这样的命令批量增加后缀名之后用肉眼把图片筛选出来。</p>
 <p>但这样还是比较麻烦的，毕竟Windows Spotlight里面的资源图片是不定期更新的，如果每次都要走这个流程大概也没几个人能坚持下来吧。（魔方这个应用似乎是有一键提取图片的功能，但也是需要经常性地去使用这个功能，稍稍麻烦）</p>
 <h2 id="spotlight-watcher">Spotlight Watcher！</h2>
@@ -379,12 +385,18 @@
 <p>然后只需要在命令行输入<code>npm i -g spotlight</code>即可。</p>
 <h3 id="配置与使用">配置与使用</h3>
 <p>通过<code>spotlight config</code>进行初始化设置：</p>
-<p><img src="3.jpg"></p>
+<div class="figure">
+<img src="3.jpg">
+
+</div>
 <p>然后就可以通过<code>spotlight update</code>手动触发一次提取，当然更推荐用<code>spotlight install</code>直接注册一个系统服务自动运行，以后只需要时不时去config时设置的目标文件夹就能收获一堆新壁纸了。</p>
 <p>当然也可以直接把系统的壁纸幻灯片文件夹设为目标文件夹，更省心。</p>
 <p>如果不想使用了，可以通过<code>spotlight uninstall</code>把之前安装的服务卸载掉。</p>
 <hr>
-<p><img src="4.jpg"></p>
+<div class="figure">
+<img src="4.jpg">
+
+</div>
 
       
     </div>
@@ -458,6 +470,8 @@
 
           
   <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
     
   </div>
 
@@ -771,6 +785,24 @@
 
 
 
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c0d6ba65b31b4ba87346',
+      clientSecret: '2bb754d2cc0c494c6acded68b705fdc44fac9ca1',
+      repo: 'MegrezZhu.github.io',
+      owner: 'MegrezZhu',
+      admin: ['MegrezZhu'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
 
 
 
