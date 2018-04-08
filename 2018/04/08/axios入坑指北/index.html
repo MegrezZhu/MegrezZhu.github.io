@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScirpt,Node.js," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="axios是一个基于JavaScript的HTTP请求模块，为JavaScript的两个主要环境（Node.js与Browser）提供了一致的HTTP接口。 由于axios的readme里面已经有十分详尽的API文档以及设置项说明，因此这篇博客将主要介绍一些文档里没有的东西（a.k.a 坑），使用部分将简单带过。 Note：本篇博客基于axios目前的最新版本0.18.0，由于axios近期可">
+<meta name="keywords" content="JavaScirpt,Node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="axios入坑指北">
+<meta property="og:url" content="http://yoursite.com/2018/04/08/axios入坑指北/index.html">
+<meta property="og:site_name" content="Megrez">
+<meta property="og:description" content="axios是一个基于JavaScript的HTTP请求模块，为JavaScript的两个主要环境（Node.js与Browser）提供了一致的HTTP接口。 由于axios的readme里面已经有十分详尽的API文档以及设置项说明，因此这篇博客将主要介绍一些文档里没有的东西（a.k.a 坑），使用部分将简单带过。 Note：本篇博客基于axios目前的最新版本0.18.0，由于axios近期可">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/04/08/axios入坑指北/1523163443871.png">
+<meta property="og:updated_time" content="2018-04-08T05:07:34.414Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="axios入坑指北">
+<meta name="twitter:description" content="axios是一个基于JavaScript的HTTP请求模块，为JavaScript的两个主要环境（Node.js与Browser）提供了一致的HTTP接口。 由于axios的readme里面已经有十分详尽的API文档以及设置项说明，因此这篇博客将主要介绍一些文档里没有的东西（a.k.a 坑），使用部分将简单带过。 Note：本篇博客基于axios目前的最新版本0.18.0，由于axios近期可">
+<meta name="twitter:image" content="http://yoursite.com/2018/04/08/axios入坑指北/1523163443871.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/08/axios入坑指北/"/>
+
+
+
+<link href="/css/custom.css" rel="stylesheet">
+
+
+  <title>axios入坑指北 | Megrez</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-106189831-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Megrez</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Everything is for DOPAMINE</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/08/axios入坑指北/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhu Chu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Megrez">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">axios入坑指北</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-08T10:07:07+08:00">
+                2018-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/axios/axios" target="_blank" rel="external">axios</a>是一个基于JavaScript的HTTP请求模块，为JavaScript的两个主要环境（Node.js与Browser）提供了一致的HTTP接口。</p>
+<p>由于axios的<a href="https://github.com/axios/axios/blob/master/README.md" target="_blank" rel="external">readme</a>里面已经有十分详尽的API文档以及设置项说明，因此这篇博客将主要介绍一些文档里没有的东西（a.k.a 坑），使用部分将简单带过。</p>
+<p>Note：本篇博客基于axios目前的最新版本<code>0.18.0</code>，由于axios近期可能会有大的更新(see <a href="https://github.com/axios/axios/issues/1333" target="_blank" rel="external">this issue</a>)，届时本篇博客部分内容可能将过时。</p>
+<a id="more"></a>
+<h2 id="features">Features</h2>
+<p>以下来自readme：</p>
+<ul>
+<li>Make <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank" rel="external">XMLHttpRequests</a> from the browser</li>
+<li>Make <a href="http://nodejs.org/api/http.html" target="_blank" rel="external">http</a> requests from node.js</li>
+<li>Supports the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="external">Promise</a> API</li>
+<li>Intercept request and response</li>
+<li>Transform request and response data</li>
+<li>Cancel requests</li>
+<li>Automatic transforms for JSON data</li>
+<li>Client side support for protecting against <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery" target="_blank" rel="external">XSRF</a></li>
+</ul>
+<p>在一般的使用情景下，主要的痛点在于：</p>
+<ul>
+<li>Promise API</li>
+<li>取消请求的能力（which is使用原生Promise比较难办的需求）</li>
+<li>通过intercept扩展功能</li>
+</ul>
+<h2 id="基本使用">基本使用</h2>
+<h3 id="引入">引入</h3>
+<p>对于Browser：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/axios/dist/axios.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>对于Node.js，以及使用了<a href="https://github.com/webpack/webpack" target="_blank" rel="external">Webpack</a>等构建工具的前端项目：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>; <span class="comment">// es module</span></div></pre></td></tr></table></figure>
+<p>or:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> axios = <span class="built_in">require</span>(<span class="string">'axios'</span>); <span class="comment">// Node.js / CommonJS</span></div></pre></td></tr></table></figure>
+<h3 id="配置">配置</h3>
+<p>axios有许多配置项，它们的默认值在<a href="https://github.com/axios/axios#request-config" target="_blank" rel="external">这里</a>可以察看。在需要对默认值进行修改的时候（比如修改请求的默认baseURL），通过：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> ax = <span class="built_in">require</span>(<span class="string">'axios'</span>).create(&#123;</div><div class="line">    baseURL: <span class="string">'http://my.custom-base-domain.com'</span>,</div><div class="line">    timeout: <span class="number">3000</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>对默认配置进行覆盖。</p>
+<p>而在请求的时候，可以通过提供配置项来对上面的设置进行再次覆盖：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ax.get(<span class="string">'https://www.google.com'</span>, &#123; <span class="attr">timeout</span>: <span class="number">5000</span> &#125;);</div></pre></td></tr></table></figure>
+<p>总地来说，axios中的配置项的优先级为：请求中配置&gt;用户默认配置&gt;axios默认配置。</p>
+<h3 id="请求">请求</h3>
+<p>由于axios提供了基于Promise的API，因此可以很优雅地写出链式的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">axios</div><div class="line">	.get(<span class="string">'https://www.google.com'</span>)</div><div class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</div><div class="line">    	<span class="built_in">console</span>.log(res.data)</div><div class="line">	&#125;)</div><div class="line">	.catch(<span class="built_in">console</span>.error);</div><div class="line">axios</div><div class="line">	.post(<span class="string">'/api/user'</span>, &#123; <span class="attr">name</span>: <span class="string">'chu'</span> &#125;)</div><div class="line">    .then(<span class="function">(<span class="params">&#123; status &#125;</span>) =&gt;</span> &#123;</div><div class="line">    	<span class="built_in">console</span>.log(<span class="string">`regist done with status code <span class="subst">$&#123;status&#125;</span>.`</span>); </div><div class="line">	&#125;);</div></pre></td></tr></table></figure>
+<p>当然，一般更推荐Promise和Async/Await配合食用（需要注意执行环境的兼容性）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">(<span class="keyword">async</span> () =&gt; &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> axios.get(<span class="string">'http://fake-domain/news-today'</span>);</div><div class="line">        <span class="built_in">console</span>.log(data);</div><div class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</div><div class="line">        <span class="built_in">console</span>.error(<span class="string">'error!'</span>);</div><div class="line">    &#125;</div><div class="line">&#125;)()</div><div class="line">	.catch(<span class="built_in">console</span>.error);</div></pre></td></tr></table></figure>
+<h2 id="入坑与爬坑">入坑与爬坑</h2>
+<blockquote>
+<p>Note again: 这里讲的是<code>0.18.0</code>中的情况，在新的axios大版本将有可能：</p>
+<ul>
+<li>修复这些问题</li>
+<li>原生提供解决方案</li>
+</ul>
+</blockquote>
+<h3 id="cookies">Cookies</h3>
+<p>虽然说axios旨在为Node.js端与Browser端提供统一的HTTP API， 但在Cookie的支持上还是有一点不同。</p>
+<p>在浏览器端，由于浏览器自带对Cookie的管理，因此只需要在axios的配置中加入<code>withCredentials: true</code>即可。</p>
+<p>而在Node.js端，由于node环境原生并没有对cookie进行handle（而很神奇地，axios也并没有做处理），因此想要在node下获得和浏览器端一致的体验，需要引入下面两个额外的模块：</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/axios-cookiejar-support" target="_blank" rel="external">axios-cookiejar-support</a></li>
+<li><a href="https://www.npmjs.com/package/tough-cookie" target="_blank" rel="external">tough-cookie</a></li>
+</ul>
+<p>并进行如下的配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> axios = <span class="built_in">require</span>(<span class="string">'axios'</span>).default;</div><div class="line"><span class="keyword">const</span> axiosCookieJarSupport = <span class="built_in">require</span>(<span class="string">'axios-cookiejar-support'</span>).default;</div><div class="line"><span class="keyword">const</span> tough = <span class="built_in">require</span>(<span class="string">'tough-cookie'</span>);</div><div class="line"> </div><div class="line">axiosCookieJarSupport(axios);</div><div class="line"> </div><div class="line"><span class="keyword">const</span> cookieJar = <span class="keyword">new</span> tough.CookieJar();</div><div class="line"> </div><div class="line">axios.get(<span class="string">'https://google.com'</span>, &#123;</div><div class="line">  jar: cookieJar, <span class="comment">// tough.CookieJar or boolean</span></div><div class="line">  withCredentials: <span class="literal">true</span> <span class="comment">// If true, send cookie stored in jar</span></div><div class="line">&#125;)</div><div class="line">.then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="built_in">console</span>.log(cookieJar);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>注意，引入模块之后仍然需要<code>withCredentials: true</code>的配置项来使用cookies。</p>
+<h3 id="proxy">Proxy</h3>
+<blockquote>
+<p>这一项由于我不清楚是使用方式的原因还是axios本身的bug，因此只能提供一种workaround。如果是我自己使用方式不当导致的，请在评论区或者发邮件告诉我:)</p>
+</blockquote>
+<p>由于一些不可名状的原因，在写需要进行HTTP请求的代码的时候（特别是各种爬虫），经常需要通过中间代理，而axios自身虽然在配置项中提供了<code>proxy</code>字段，但亲测它的可用性比较差（主要是无法通过http proxy访问https的链接），因此需要一些额外的工作。</p>
+<p>需要用到的库：<a href="https://www.npmjs.com/package/caw" target="_blank" rel="external">caw</a></p>
+<blockquote>
+<p>caw是一个用于提供http/https agent的库，具有相似功能的还有：tunnel, http-proxy(s)-agent等，但经测试似乎只有caw能与axios兼容:(</p>
+</blockquote>
+<p>使用方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> ax = <span class="built_in">require</span>(<span class="string">'axios'</span>);</div><div class="line"><span class="keyword">const</span> caw = <span class="built_in">require</span>(<span class="string">'caw'</span>);</div><div class="line"></div><div class="line">ax.get(</div><div class="line">	<span class="string">'https://google.com'</span>,</div><div class="line">    &#123;</div><div class="line">        httpAgent: caw(<span class="string">'http://127.0.0.1:1080'</span>),</div><div class="line">        httpsAgent: caw(<span class="string">'https://127.0.0.1:1080'</span>, &#123; <span class="attr">protocol</span>: &#125;)</div><div class="line">    &#125;</div><div class="line">);</div></pre></td></tr></table></figure>
+<h3 id="retry">Retry</h3>
+<blockquote>
+<p>这一点并不是axios的bug或者不足之处，只是我自己在写项目时候的一个痒点，在这里分享出来。</p>
+</blockquote>
+<p>由于网络服务的不稳定性，在一些比较重要的、需要保证成功请求的情景下，需要通过多次请求来保证成功，于是经常会写出下面这样的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getSomething</span> (<span class="params">url</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> maxRetry = <span class="number">3</span>;</div><div class="line">    <span class="keyword">while</span> (maxRetry--) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> axios.get(url);</div><div class="line">            <span class="keyword">return</span> data;</div><div class="line">        &#125; <span class="keyword">catch</span> (err) &#123;&#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'failed too many times.'</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当然，为了D.R.Y.，到处这样写当然是不优雅的，因此可以通过axios的interceptor来达成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">axios.interceptors.response.use(</div><div class="line">  res =&gt; res,</div><div class="line">  err =&gt; &#123;</div><div class="line">    <span class="keyword">if</span> (err.message &amp;&amp; err.message.match(<span class="regexp">/timeout/</span>)) &#123; <span class="comment">// timeout case</span></div><div class="line">      <span class="keyword">const</span> config = err.config;</div><div class="line">      <span class="keyword">if</span> (config.method !== <span class="string">'get'</span>) <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(err); <span class="comment">// only retry GET methods</span></div><div class="line">      <span class="keyword">if</span> (config._leftRetry) config._leftRetry--;</div><div class="line">      <span class="keyword">else</span> config._leftRetry = <span class="number">3</span>; <span class="comment">// default retry times</span></div><div class="line"></div><div class="line">      <span class="keyword">if</span> (config._leftRetry) &#123;</div><div class="line">        <span class="keyword">return</span> axios(config);</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(err);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(err);</div><div class="line">  &#125;</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>当然上面代码还有许多修改的空间，比如可以根据具体需求修改重试的条件（在上面的代码中我只对超时的情景进行了重新请求），或者修改重试的method条件。</p>
+<p>Note：重试时需要保证调用的API的幂等性<a href="http://restcookbook.com/HTTP%20Methods/idempotency/" target="_blank" rel="external">Idempotency</a>，否则重试可能会带来额外的副作用。</p>
+<h3 id="timeout">Timeout</h3>
+<p>axios自身即对请求超时有支持（设置项<code>timeout: 3000</code>ms），但超时的计算仅限于从发出请求到服务端返回response header的时刻，也就是说从收到response header到完整接收response body的这段时间是没有计算在内的。</p>
+<p>而在一些比较少见的情况下（特别是response body比较大，比如图片下载的情况），response body的接收速度会降为0，但由于连接仍未被断开，因此仍未算作请求失败——于是就出现了请求时间&gt;&gt;超时时限仍未结束的问题。</p>
+<p>其实从严格意义上来讲，这并不是bug或者缺陷。不过有时候尽早结束没有速度的下载并重新开始一个新的请求比等待一个不定长的时间来得更加行之有效，于是可以使用Interceptor结合<a href="http://restcookbook.com/HTTP%20Methods/idempotency/" target="_blank" rel="external">cancelToken</a>对下载超时的情况增加timeout限制。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">axios.interceptors.request.use(</div><div class="line">  config =&gt; &#123;</div><div class="line">    <span class="keyword">const</span> cancelSource = CancelToken.source();</div><div class="line">    <span class="keyword">const</span> token = cancelSource.token;</div><div class="line"></div><div class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">      cancelSource.cancel(<span class="string">'custom timeout.'</span>);</div><div class="line">    &#125;, TIMEOUT);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      ...config,</div><div class="line">      cancelToken: cancelSource.token</div><div class="line">    &#125;;</div><div class="line">  &#125;,</div><div class="line">  <span class="built_in">Promise</span>.reject</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>当然，这段代码只是一个不成熟的草稿，有一些额外的问题（比如会覆盖原请求的cancelToken）。</p>
+<h3 id="incomplete-body">Incomplete Body</h3>
+<p>与上一个类似，在response body较大、网络状态不佳的时候有可能出现。在传输过程中连接被中断，axios会认为是连接正常终止：</p>
+<div class="figure">
+<img src="1523163443871.png" alt="incomplete file">
+<p class="caption">incomplete file</p>
+</div>
+<p>对于这个问题，没有什么很优雅的解决方法，可以通过设置response interceptor来加一层body size的判断。</p>
+<h2 id="最后">最后</h2>
+<p>其实相比于另外一个HTTP库<a href="https://github.com/request/request" target="_blank" rel="external">request</a>，axios还是有比较多的坑的。但毕竟头比较铁，尝试着找到了一些workaround配合上也能用。</p>
+<p>（毕竟相比request，个人觉得axios的名字更酷炫一点哈哈哈哈）</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScirpt/" rel="tag"># JavaScirpt</a>
+          
+            <a href="/tags/Node-js/" rel="tag"># Node.js</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/13/STINGY-SAT问题的简单证明/" rel="next" title="对STINGY SAT问题属于NPC的简单证明">
+                <i class="fa fa-chevron-left"></i> 对STINGY SAT问题属于NPC的简单证明
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Zhu Chu" />
+          <p class="site-author-name" itemprop="name">Zhu Chu</p>
+           
+              <p class="site-description motion-element" itemprop="description">Everything is for DOPAMINE</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/MegrezZhu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhu-chu-48" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/i490815101" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#features"><span class="nav-number">1.</span> <span class="nav-text">Features</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">2.</span> <span class="nav-text">基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引入"><span class="nav-number">2.1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求"><span class="nav-number">2.3.</span> <span class="nav-text">请求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入坑与爬坑"><span class="nav-number">3.</span> <span class="nav-text">入坑与爬坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cookies"><span class="nav-number">3.1.</span> <span class="nav-text">Cookies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy"><span class="nav-number">3.2.</span> <span class="nav-text">Proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#retry"><span class="nav-number">3.3.</span> <span class="nav-text">Retry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#timeout"><span class="nav-number">3.4.</span> <span class="nav-text">Timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#incomplete-body"><span class="nav-number">3.5.</span> <span class="nav-text">Incomplete Body</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhu Chu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c0d6ba65b31b4ba87346',
+      clientSecret: '2bb754d2cc0c494c6acded68b705fdc44fac9ca1',
+      repo: 'MegrezZhu.github.io',
+      owner: 'MegrezZhu',
+      admin: ['MegrezZhu'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
