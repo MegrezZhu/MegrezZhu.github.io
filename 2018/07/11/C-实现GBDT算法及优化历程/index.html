@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="C++,GBDT," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="其实是一个课程作业，要求实现 GBDT 算法。在实现的过程中参考了很多资料，也做了很多优化，觉得收获很大，因此把开发的过程也记录了下来。 源代码在 GitHub。">
+<meta name="keywords" content="C++,GBDT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++实现GBDT算法及优化历程">
+<meta property="og:url" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/index.html">
+<meta property="og:site_name" content="Megrez">
+<meta property="og:description" content="其实是一个课程作业，要求实现 GBDT 算法。在实现的过程中参考了很多资料，也做了很多优化，觉得收获很大，因此把开发的过程也记录了下来。 源代码在 GitHub。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/1530349736034.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/1530349765005.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/1530350508884.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/1530362331810.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/1530422837519.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/1530422953285.png">
+<meta property="og:updated_time" content="2018-07-11T06:04:59.384Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++实现GBDT算法及优化历程">
+<meta name="twitter:description" content="其实是一个课程作业，要求实现 GBDT 算法。在实现的过程中参考了很多资料，也做了很多优化，觉得收获很大，因此把开发的过程也记录了下来。 源代码在 GitHub。">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/1530349736034.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/"/>
+
+
+
+<link href="/css/custom.css" rel="stylesheet">
+
+
+  <title>C++实现GBDT算法及优化历程 | Megrez</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-106189831-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Megrez</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Everything is for DOPAMINE</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/11/C-实现GBDT算法及优化历程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhu Chu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Megrez">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++实现GBDT算法及优化历程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-11T13:55:39+08:00">
+                2018-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>其实是一个课程作业，要求实现 GBDT 算法。在实现的过程中参考了很多资料，也做了很多优化，觉得收获很大，因此把开发的过程也记录了下来。</p>
+<p>源代码在 <a href="https://github.com/MegrezZhu/GradientBoostingDecisionTree" target="_blank" rel="external">GitHub</a>。</p>
+<a id="more"></a>
+<h2 id="构建与使用">1. 构建与使用</h2>
+<h3 id="构建">1.1 构建</h3>
+<ul>
+<li>Windows: 使用 Visual Studio 2017 打开解决方案并生成即可。</li>
+<li>Linux: 根目录提供了 <code>makefile</code> 文件，使用 <code>make</code> 编译即可，需要 <code>gcc &gt;= 5.4.0</code></li>
+</ul>
+<h3 id="使用">1.2 使用</h3>
+<ul>
+<li><p>用法：<code>boost &lt;config_file&gt; &lt;train_file&gt; &lt;test_file&gt; &lt;predict_dest&gt;</code></p></li>
+<li><p>接受 LibSVM 格式的训练数据输入，如下每行代表一个训练样本：</p></li>
+</ul>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;label&gt; &lt;feature-index&gt;:&lt;feature-value&gt; &lt;feature-index&gt;:&lt;feature-value&gt; &lt;feature-index&gt;:&lt;feature-value&gt;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>用于预测的数据输入和训练数据类似：</li>
+</ul>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;id&gt; &lt;feature-index&gt;:&lt;feature-value&gt; &lt;feature-index&gt;:&lt;feature-value&gt; &lt;feature-index&gt;:&lt;feature-value&gt;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p><strong>目前只支持二分类问题</strong></p></li>
+<li><p><code>&lt;config_file&gt;</code> 指定训练参数：</p></li>
+</ul>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">eta = 1.                 # shrinkage rate</div><div class="line">gamma = 0.               # minimum gain required to split a node</div><div class="line">maxDepth = 6             # max depth allowed</div><div class="line">minChildWeight = 1       # minimum allowed size for a node to be splitted</div><div class="line">rounds = 1               # REQUIRED. number of subtrees</div><div class="line">subsample = 1.           # subsampling ratio for each tree</div><div class="line">colsampleByTree = 1.     # tree-wise feature subsampling ratio</div><div class="line">maxThreads = 1;          # max running threads</div><div class="line">features;                # REQUIRED. number of features</div><div class="line">validateSize = .2        # if greater than 0, input data will be split into two sets and used for training and validation repectively</div></pre></td></tr></table></figure></p>
+<h2 id="算法原理">2. 算法原理</h2>
+<p>GBDT 的核心可以分成两部分，分别是 Gradient Boosting 和 Decision Tree:</p>
+<ul>
+<li>Decision Tree : GBDT 的基分类器，通过划分输入样本的特征使得落在相同特征的样本拥有大致相同的 label。由于在 GBDT 中需要对若干不同的 Decision Tree 的结果进行综合，因此一般采用的是 Regression Tree （回归树）而不是 Classification Tree （分类树）。</li>
+<li>Gradient Boosting: 迭代式的集成算法，每一棵决策树的学习目标 y 都是之前所有树的结论和的残差（即梯度方向），也即 <span class="math inline">\(y_i=y-\sum_{j=0}^{i-1}{\hat{y_j}}\)</span> 。</li>
+</ul>
+<h2 id="实现与优化历程">3. 实现与优化历程</h2>
+<p>各个部分的实现均经过若干次“初版实现 - 性能 profiling - 优化得到下一版代码”的迭代。其中，性能 profiling 部分，使用的是 Visual Studio 2017 的“性能探查器”功能，在进行性能 profile 之前均使用 release 模式编译（打开<code>/O2 /Oi</code>优化选项）。</p>
+<h3 id="数据处理">3.1 数据处理</h3>
+<p>选择的输入文件数据格式是 Libsvm 的格式，格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;label&gt; &lt;feature-index&gt;:&lt;feature-value&gt; &lt;feature-index&gt;:&lt;feature-value&gt;</div></pre></td></tr></table></figure>
+<p>可以看到这种格式天然适合用来表示稀疏的数据集，但在实现过程中，为了简单起见以及 cache 性能，我通过将空值填充为 0 转化为密集矩阵形式存储。代价是内存占用会相对高许多。</p>
+<h4 id="初版">3.1.1 初版</h4>
+<p>最初并没有做什么优化，采用的是如下的简单流程：</p>
+<ul>
+<li>文件按行读取</li>
+<li>对于每一行内容，先转成 <code>std::stringstream</code>，再从中解析出相应的数据。</li>
+</ul>
+<p>核心代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function">ifstream <span class="title">in</span><span class="params">(path)</span></span>;</div><div class="line"><span class="built_in">string</span> line;</div><div class="line"><span class="keyword">while</span> (getline(in, line)) &#123;</div><div class="line">    <span class="keyword">auto</span> item = parseLibSVMLine(move(line), featureCount); <span class="comment">// &#123; label, vector &#125;</span></div><div class="line">    x.push_back(move(item.first));</div><div class="line">    y.push_back(item.second);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* in parseLibSVMLine */</span></div><div class="line"><span class="function"><span class="built_in">stringstream</span> <span class="title">ss</span><span class="params">(line)</span></span>;</div><div class="line">ss &gt;&gt; label;</div><div class="line"><span class="keyword">while</span> (ss) &#123;</div><div class="line">    <span class="keyword">char</span> _;</div><div class="line">    ss &gt;&gt; index &gt;&gt; _ &gt;&gt; value;</div><div class="line">    values[index - <span class="number">1</span>] = value;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>profile 结果：</strong></p>
+<div class="figure">
+<img src="1530349736034.png" alt="1530349736034">
+<p class="caption">1530349736034</p>
+</div>
+<p>可以看到，主要的耗时在于将一行字符串解析成我们需要的 label + vector 数据这一过程中，进一步分析：</p>
+<div class="figure">
+<img src="1530349765005.png" alt="1530349765005">
+<p class="caption">1530349765005</p>
+</div>
+<p>因此得知主要问题在于字符串解析部分。此时怀疑是 <code>std::stringstream</code> 的实现为了线程安全、错误检查等功能牺牲了性能，因此考虑使用 <code>cstdio</code> 中的实现。</p>
+<h4 id="改进">3.1.2 改进</h4>
+<p>将 <code>parseLibSVMLine</code> 的实现重写，使用<code>cstdio</code> 中的<code>sscanf</code> 代替了 <code>std::stringstream</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> lastp = <span class="number">-1</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> p = <span class="number">0</span>; p &lt; line.length(); p++) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">isspace</span>(line[p]) || p == line.length() - <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (lastp == <span class="number">-1</span>) &#123;</div><div class="line">            <span class="built_in">sscanf</span>(line.c_str(), <span class="string">"%zu"</span>, &amp;label);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">sscanf</span>(line.c_str() + lastp, <span class="string">"%zu:%lf"</span>, &amp;index, &amp;value);</div><div class="line">            values[index - <span class="number">1</span>] = value;</div><div class="line">        &#125;</div><div class="line">        lastp = <span class="keyword">int</span>(p + <span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>profile 结果：</strong></p>
+<div class="figure">
+<img src="1530350508884.png" alt="1530350508884">
+<p class="caption">1530350508884</p>
+</div>
+<p>可以看到，虽然 parse 部分仍然是计算的热点，但这部分的计算量显著下降（53823 -&gt; 23181），读取完整个数据集的是时间减少了 50% 以上。</p>
+<h4 id="最终版">3.1.3 最终版</h4>
+<p>显然，在数据集中，每一行之间的解析任务都是相互独立的，因此可以在一次性读入整个文件并按行划分数据后，对数据的解析进行并行化：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">string</span> content;</div><div class="line">getline(ifstream(path), content, <span class="string">'\0'</span>);</div><div class="line">stringstream in(move(content));</div><div class="line"></div><div class="line"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; lines;</div><div class="line"><span class="built_in">string</span> line;</div><div class="line"><span class="keyword">while</span> (getline(in, line)) lines.push_back(move(line));</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lines.size(); i++) &#123;</div><div class="line">    <span class="keyword">auto</span> item = parseLibSVMLine(move(lines[i]), featureCount);</div><div class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp critical</span></div><div class="line">    &#123;</div><div class="line">        x.push_back(move(item.first));</div><div class="line">        y.push_back(item.second);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>根据 profile 结果，进行并行化后，性能提升了约 25%。CPU 峰值占用率从 15% 上升到了 70%。可以发现性能的提升并没有 CPU 占用率的提升高，原因根据推测有以下两点：</p>
+<ul>
+<li>读取文件的IO时间，在测试时使用的是 672MB 的数据集，因此光是读取全部内容就占了 50% 以上的时间</li>
+<li>多线程同步的代价</li>
+</ul>
+<h3 id="决策树生成">3.2 决策树生成</h3>
+<p>决策树生成的过程采用的是 depth-first 深度优先的方式，即不断向下划分子树直到遇到下面的终止条件之一：</p>
+<ul>
+<li>达到限定的最大深度</li>
+<li>划分收益小于阈值</li>
+<li>该节点中的样本数小于阈值</li>
+</ul>
+<p>大致代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> p = <span class="keyword">new</span> RegressionTree();</div><div class="line"></div><div class="line"><span class="comment">// calculate value for prediction</span></div><div class="line">p-&gt;average = calculateAverageY();</div><div class="line"></div><div class="line"><span class="keyword">if</span> (x.size() &gt; nodeThres) &#123;</div><div class="line">    <span class="comment">// try to split</span></div><div class="line">    <span class="keyword">auto</span> ret = findSplitPoint(x, y, index);</div><div class="line">    <span class="keyword">if</span> (ret.gain &gt; <span class="number">0</span> &amp;&amp; maxDepth &gt; <span class="number">1</span>) &#123; <span class="comment">// check splitablity</span></div><div class="line">        <span class="comment">// split points</span></div><div class="line">        <span class="comment">// ...</span></div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        p-&gt;left = createNode(x, y, leftIndex, maxDepth - <span class="number">1</span>);</div><div class="line">        p-&gt;right = createNode(x, y, rightIndex, maxDepth - <span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="计算划分点">3.2.1 计算划分点</h4>
+<p>在哪个特征的哪个值上做划分是决策树生成过程中最核心（也是最耗时）的部分。</p>
+<p>问题描述如下：</p>
+<p>对于数据集 <span class="math inline">\(D\)</span>，我们要找到特征 <span class="math inline">\(A\)</span> 以及该特征上的划分点 <span class="math inline">\(q\)</span>，满足 MSE (mean-square-error 均方误差) 最小： <span class="math display">\[
+(A,q)={\arg\min}_{A,q}E(A,q)
+\]</span></p>
+<p><span class="math display">\[
+\begin{equation}\begin{split}
+E(A,q)&amp;=E_{left}+E_{right}\\
+&amp;=\frac{N_1}{N_1+N_2}\sum_{(x_i,y_i)\in D_1(A,q)}(y_i-c_1)^2+\frac{N_2}{N_1+N_2}\sum_{(x_i,y_i)\in D_2(A,q)}(y_i-c_2)^2\\
+\end{split}\end{equation}
+\]</span></p>
+<p>其中：</p>
+<ul>
+<li><span class="math inline">\(c_i=\frac{1}{N_i}\sum_{(x_i,y_i)\in D_i(A,q)}y_i\)</span>，即划分后的样本 label 均值。</li>
+<li><span class="math inline">\(N_i=|D_i(A,q)|\)</span>，<span class="math inline">\(D_i\)</span> 为划分后的子数据集。</li>
+</ul>
+<p>等价地，如果用 <span class="math inline">\(G\)</span> 表示划分收益： <span class="math display">\[
+G=E_p-E(A,q)
+\]</span> 其中，<span class="math inline">\(E_p\)</span> 为划分前的 MSE: <span class="math inline">\(E_p=\sum_{(x_i,y_i)\in D}{(y_i-c)^2}\)</span>，<span class="math inline">\(c=\frac{1}{|D|}\sum_{(x_i,y_i)\in D}y_i\)</span> 。</p>
+<p>寻找最佳划分点等价于寻找收益最高的划分方案： <span class="math display">\[
+(A,q)={\arg\max}_{A,q}G(A,q)={\arg\min}_{A,q}E(A,q)
+\]</span></p>
+<h5 id="基于排序的实现">3.2.1.1 基于排序的实现</h5>
+<p>分析： <span class="math display">\[
+\begin{equation}\begin{split}
+E_{left}(A,q)
+&amp;=\sum_{(x_i,y_i)\in D_1(A,q)}(y_i-c_1)^2\\
+&amp;=\sum_{(x_i,y_i)\in D_1(A,q)}y_i^2+N_1c_1^2-2c_1^2\sum_{(x_i,y_i)\in D_1(A,q)}y_i
+\end{split}\end{equation}
+\]</span></p>
+<p><span class="math display">\[
+\begin{equation}\begin{split}
+E_{right}(A,q)
+&amp;=\sum_{(x_i,y_i)\in D_2(A,q)}(y_i-c_2)^2\\
+&amp;=\sum_{(x_i,y_i)\in D_2(A,q)}y_i^2+N_2c_2^2-2c_2^2\sum_{(x_i,y_i)\in D_2(A,q)}y_i
+\end{split}\end{equation}
+\]</span></p>
+<p>显然，<span class="math inline">\(E_{left}\)</span> 与 <span class="math inline">\(E_{right}\)</span> 都只与分割点左边（右边）的部分和有关，因此可以先排序、再从小到大枚举分割点计算出所有分割情况的收益，对于每个特征，时间复杂度均为 <span class="math inline">\(O(n\log n)+O(n)=O(n)\)</span>。</p>
+<p>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> featureIndex = <span class="number">0</span>; featureIndex &lt; x.front().size(); featureIndex++) &#123;</div><div class="line">    <span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">size_t</span>, <span class="keyword">double</span>&gt;&gt; v(index.size());</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; index.size(); i++) &#123;</div><div class="line">        <span class="keyword">auto</span> ind = index[i];</div><div class="line">        v[i].first = ind;</div><div class="line">        v[i].second = x[ind][featureIndex];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// sorting</span></div><div class="line">    tuple&lt;<span class="keyword">size_t</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt; tup;</div><div class="line">    sort(v.begin(), v.end(), [](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;l, <span class="keyword">const</span> <span class="keyword">auto</span> &amp;r) &#123;</div><div class="line">        <span class="keyword">return</span> l.second &lt; r.second;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="comment">// maintaining sums of y_i and y_i^2 in both left and right part</span></div><div class="line">    <span class="keyword">double</span> wholeErr, leftErr, rightErr;</div><div class="line">    <span class="keyword">double</span> wholeSum = <span class="number">0</span>, leftSum, rightSum;</div><div class="line">    <span class="keyword">double</span> wholePowSum = <span class="number">0</span>, leftPowSum, rightPowSum;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;t : v) &#123;</div><div class="line">        wholeSum += y[t.first];</div><div class="line">        wholePowSum += <span class="built_in">pow</span>(y[t.first], <span class="number">2</span>);</div><div class="line">    &#125;</div><div class="line">    wholeErr = calculateError(index.size(), wholeSum, wholePowSum);</div><div class="line"></div><div class="line">    leftSum = leftPowSum = <span class="number">0</span>;</div><div class="line">    rightSum = wholeSum;</div><div class="line">    rightPowSum = wholePowSum;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i + <span class="number">1</span> &lt; index.size(); i++) &#123;</div><div class="line">        <span class="keyword">auto</span> label = y[v[i].first];</div><div class="line"></div><div class="line">        leftSum += label;</div><div class="line">        rightSum -= label;</div><div class="line">        leftPowSum += <span class="built_in">pow</span>(label, <span class="number">2</span>);</div><div class="line">        rightPowSum -= <span class="built_in">pow</span>(label, <span class="number">2</span>);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (y[v[i].first] == y[v[i + <span class="number">1</span>].first]) <span class="keyword">continue</span>; <span class="comment">// same label with next, not splitable</span></div><div class="line">        <span class="keyword">if</span> (v[i].second == v[i + <span class="number">1</span>].second) <span class="keyword">continue</span>; <span class="comment">// same value, not splitable</span></div><div class="line"></div><div class="line">        leftErr = calculateError(i + <span class="number">1</span>, leftSum, leftPowSum);</div><div class="line">        rightErr = calculateError(index.size() - i - <span class="number">1</span>, rightSum, rightPowSum);</div><div class="line"></div><div class="line">        <span class="comment">// calculate error gain</span></div><div class="line">        <span class="keyword">double</span> gain = wholeErr - ((i + <span class="number">1</span>) * leftErr / index.size() + (index.size() - i - <span class="number">1</span>) * rightErr / index.size());</div><div class="line">        <span class="keyword">if</span> (gain &gt; bestGain) &#123;</div><div class="line">            bestGain = gain;</div><div class="line">            bestSplit = (v[i].second + v[i + <span class="number">1</span>].second) / <span class="number">2</span>;</div><div class="line">            bestFeature = featureIndex;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>profile 结果：</strong></p>
+<div class="figure">
+<img src="1530362331810.png" alt="1530362331810">
+<p class="caption">1530362331810</p>
+</div>
+<p>可以看到， sorting 以及 sorting 之前的数据准备部分占了很大一部分时间。</p>
+<h5 id="基于采样分桶的实现">3.2.1.2 基于采样分桶的实现</h5>
+<p>由于之前基于排序的实现耗时较大，因此考虑换一种方法。后来翻 <a href="https://lightgbm.readthedocs.io/en/latest/" target="_blank" rel="external">LightGBM</a> 的优化方案，在参考文献<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>里看到一个叫做 <em>Sampling the Splitting points (SS)</em> 的方法，比起 LightGBM 的方案， SS 方法更加容易实现。</p>
+<p>SS 方法描述如下：</p>
+<p>对于 <span class="math inline">\(N\)</span> 个乱序的数值，我们先从中随机采样 <span class="math inline">\(s\)</span> 个样本，将其排序后再等距采样 <span class="math inline">\(q-1\)</span> 个样本，以这 <span class="math inline">\(q-1\)</span> 个样本作为 <span class="math inline">\(q\)</span> 个桶的分割点。文献中指出，如果 <span class="math inline">\(q &lt;&lt; s\)</span> ，那么有很高的概率能保证分到 <span class="math inline">\(q\)</span> 个桶中的样本数量都接近 <span class="math inline">\(\frac{n}{q}\)</span> ，也就是接近等分。</p>
+<p>采用这种方法，只需要 <span class="math inline">\(O(N)\)</span> 的时间采样出 <span class="math inline">\(q\)</span> 个桶、<span class="math inline">\(O(N\log q)\)</span> 的时间来将所有样本分配到不同的桶中。</p>
+<p>在划分桶之后，我们只选择桶的分割点作为节点分割点的候选，因此只需要对代码稍作改动即可在 <span class="math inline">\(O(q)\)</span> 的时间内找到最佳的分割点。因此对于每个特征，寻找最佳分割点的时间复杂度为 <span class="math inline">\(O(N\log q)\)</span>。</p>
+<p>使用这种方法，虽然因为只考虑了以分桶边界的值进行分割的情况，不一定能找到最佳的分割，但因为 Boosting 方法其本质便是将许多“次优”决策树进行结合，因此 SS 方法造成的损失是可以接受的。</p>
+<p>代码如下（简单选择 <span class="math inline">\(s=\sqrt{N}\)</span>， <span class="math inline">\(q=\sqrt{s}\)</span> ）：</p>
+<blockquote>
+<p>虽然这样的 <span class="math inline">\(s, q\)</span> 取值事实上会使 <span class="math inline">\(q=\sqrt[4]N\)</span> ，时间复杂度 <span class="math inline">\(O(N\log q)=O(N\log N^{\frac{1}{4}})=O(N\log N)\)</span>，但在测试数据中 <span class="math inline">\(N\sim10^6\)</span>，<span class="math inline">\(q~\sim32\)</span> 已经足够小。而若 <span class="math inline">\(N\)</span> 继续增大，则可以简单将 <span class="math inline">\(q\)</span> 设为一个不大于 <span class="math inline">\(128\)</span> 的常数，影响不大。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* in findSplitPoint */</span></div><div class="line"><span class="keyword">size_t</span> nSample = <span class="keyword">size_t</span>(<span class="built_in">pow</span>(num, <span class="number">.5</span>)), nBin = <span class="keyword">size_t</span>(<span class="built_in">pow</span>(num, <span class="number">.25</span>));</div><div class="line"><span class="keyword">auto</span> dividers = sampleBinsDivider(x, nSample, nBin);</div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; binSums(nBin, <span class="number">.0</span>), binPowSums(nBin, <span class="number">.0</span>);</div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">size_t</span>&gt; binSizes(nBin, <span class="number">0</span>);</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">    <span class="keyword">auto</span> value = getFeatureValue(featureIndex, i);</div><div class="line">    <span class="keyword">auto</span> into = decideWhichBin(dividers, value);</div><div class="line">    <span class="keyword">auto</span> label = y[i];</div><div class="line">    binSums[into] += label;</div><div class="line">    binPowSums[into] += <span class="built_in">pow</span>(label, <span class="number">2</span>);</div><div class="line">    binSizes[into]++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另外：因为数据集中数据的分布是十分稀疏的，也即有大部分都是 0 值，因此在 <code>decideWhichBin</code> 中如果加入对小于第一个分割点的特判，将能带来约 20% 的时间减少：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">size_t</span> RegressionTree::decideWhichBin(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt;&amp; divider, <span class="keyword">double</span> value) &#123;</div><div class="line">  <span class="keyword">if</span> (divider.empty() || value &lt;= divider.front()) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">  <span class="keyword">if</span> (value &gt; divider.back()) <span class="keyword">return</span> divider.size();</div><div class="line">  <span class="keyword">auto</span> it = lower_bound(divider.cbegin(), divider.cend(), value);</div><div class="line">  <span class="keyword">return</span> it - divider.cbegin();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>根据在相同数据集、相同参数的测试结果，使用 SS 方法的每轮迭代时间减少约 80%。</p>
+<h5 id="加入并行">3.2.1.3 加入并行</h5>
+<p>显然在寻找最佳的划分方案时，在不同的特征上寻找最佳划分点的任务是相互独立的，因此可以在特征层面实现并行：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; featureIndexes.size(); i++) &#123;</div><div class="line">  <span class="comment">/*</span></div><div class="line"><span class="comment">    sampling, bining...</span></div><div class="line"><span class="comment">    */</span></div><div class="line"></div><div class="line">  <span class="comment">// for each divider</span></div><div class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp critical</span></div><div class="line">    <span class="keyword">if</span> (gain &gt; bestGain) &#123;</div><div class="line">        bestGain = gain;</div><div class="line">        bestSplit = divider;</div><div class="line">        bestFeature = featureIndex;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>加入并行优化后，CPU峰值占用率从 15% 提升到 70%， 每轮迭代时间减少约 60%。</p>
+<h4 id="节点生成">3.2.2 节点生成</h4>
+<p>以 depth-first 的顺序进行生成，直到遇到终止条件为止：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> p = <span class="keyword">new</span> RegressionTree();</div><div class="line"><span class="comment">// calculate value for prediction</span></div><div class="line">p-&gt;average = average(y);</div><div class="line"><span class="keyword">if</span> (index.size() &gt; max&lt;<span class="keyword">size_t</span>&gt;(<span class="number">1</span>, config.minChildWeight)) &#123; <span class="comment">// if this node is big enough</span></div><div class="line">    <span class="comment">// try to split</span></div><div class="line">    <span class="keyword">auto</span> ret = findSplitPoint(xx, y, index, featureIndexes);</div><div class="line">    <span class="keyword">if</span> (ret.gain &gt; config.gamma &amp;&amp; leftDepth &gt; <span class="number">1</span>) &#123; <span class="comment">// check splitablity</span></div><div class="line">        <span class="comment">/*</span></div><div class="line"><span class="comment">          split points ...</span></div><div class="line"><span class="comment">        */</span></div><div class="line">        <span class="comment">// start splitting</span></div><div class="line">        <span class="keyword">if</span> (leftIndex.size() != <span class="number">0</span> &amp;&amp; rightIndex.size() != <span class="number">0</span>) &#123;</div><div class="line">            p-&gt;isLeaf = <span class="literal">false</span>;</div><div class="line">            p-&gt;featureIndex = ret.featureIndex;</div><div class="line">            p-&gt;featureValue = ret.splitPoint;</div><div class="line">            <span class="comment">// recursively build left and right subtrees</span></div><div class="line">            p-&gt;left = createNode(leftX, leftY, config, leftDepth - <span class="number">1</span>);</div><div class="line">            p-&gt;right = createNode(rightX, rightY, config, leftDepth - <span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="预测">3.3 预测</h3>
+<p>对于输入的每个样本，根据相应树节点的划分条件不断向下划分直到遇到叶子节点为止，此时以叶子结点中的训练样本的平均 label 作为预测值：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (isLeaf) <span class="keyword">return</span> average;</div><div class="line"><span class="keyword">if</span> (r[featureIndex] &lt;= featureValue) <span class="keyword">return</span> left-&gt;predict(r);</div><div class="line"><span class="keyword">else</span> <span class="keyword">return</span> right-&gt;predict(r);</div></pre></td></tr></table></figure>
+<p>显然，不同样本之间的预测任务是相互独立的，因此可以对样本之间的预测做并行：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Data::DataColumn result(x.size());</div><div class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; x.size(); i++) &#123;</div><div class="line">    result[i] = predict(x[i]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="boosting">3.4 Boosting</h3>
+<p>Boosting 部分相对比较简单，只需要在每次生成一棵新的决策树后维护一下残差即可：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> (roundsLeft--) &#123;</div><div class="line">    <span class="keyword">auto</span> subtree = RegressionTree::fit(xx, residual, config);</div><div class="line">    <span class="keyword">auto</span> pred = subtree-&gt;predict(x);</div><div class="line">    pred *= config.eta; <span class="comment">// shrinkage rate</span></div><div class="line">    residual -= pred;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="其他优化">4. 其他优化</h2>
+<h3 id="性能优化">4.1 性能优化</h3>
+<h4 id="sample性能">4.1.1 sample性能</h4>
+<p>原本在采样分割点的时候使用的是 C++17 标准中的 <code>std::sample</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; samples(s);</div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">size_t</span>&gt; sampleIndex(s);</div><div class="line">sample(index.begin(), index.end(), sampleIndex.begin(), s, mt19937&#123; random_device&#123;&#125;() &#125;);</div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; s; i++) samples[i] = v[sampleIndex[i]];</div></pre></td></tr></table></figure>
+<p>但从 profiling 结果来看， <code>std::sample</code> 有很严重的效率问题：</p>
+<div class="figure">
+<img src="1530422837519.png" alt="1530422240752">
+<p class="caption">1530422240752</p>
+</div>
+<p>对比使用普通随机抽样的情况：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; samples(s);</div><div class="line"><span class="built_in">std</span>::random_device rd;</div><div class="line"><span class="keyword">auto</span> gen = <span class="built_in">std</span>::default_random_engine(rd());</div><div class="line"><span class="built_in">std</span>::uniform_int_distribution&lt;<span class="keyword">size_t</span>&gt; dis(<span class="number">0</span>, index.size() - <span class="number">1</span>);</div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; s; i++) samples[i] = v[index[dis(gen)]];</div></pre></td></tr></table></figure>
+<div class="figure">
+<img src="1530422953285.png" alt="1530422953285">
+<p class="caption">1530422953285</p>
+</div>
+<p>可以看到，不使用 <code>std::sample</code> 的话，每轮耗时能减少一半以上。</p>
+<h4 id="节点分割">4.1.2 节点分割</h4>
+<p>在划分左右子树的数据时，如果直接划分 X, Y 数据的话会需要比较多的内存操作时间，因此这里选择的做法是：X, Y 固定不变，采用划分索引的方式进行，通过索引来获得在属于该节点的样本下标：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; index.size(); i++) &#123;</div><div class="line">    <span class="keyword">auto</span> ind = index[i];</div><div class="line">    <span class="keyword">if</span> (xx[ret.featureIndex][ind] &lt;= ret.splitPoint) &#123;</div><div class="line">        leftIndex.push_back(ind); <span class="comment">// to the left</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        rightIndex.push_back(ind); <span class="comment">// to the right</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="并行化">4.2 并行化</h3>
+<p>并行化的实现依靠的是 OpenMP，通过形如 <code>#pragma omp parallel</code> 的编译宏指令实现。</p>
+<p>在实现中，有以下几处使用了并行：</p>
+<ul>
+<li>输入数据处理，见 2.1.3</li>
+<li>寻找最佳分裂点，见 2.2.1.3</li>
+<li>预测，见 2.3</li>
+</ul>
+<h3 id="cache性能优化">4.3 cache性能优化</h3>
+<h4 id="x重整">4.3.1 X重整</h4>
+<p>对于 LibSVM 格式的输入数据来说，一个很直觉的存储方式是以 <span class="math inline">\(N \times dims\)</span> 的形状存储。但纵观整个算法，在训练过程中对数据的访问都是固定 <span class="math inline">\(dims\)</span> 维的连续访问（即对所有样本的某一特征的读取），这样不连续的内存访问会造成 cache 性能的下降。因此在训练之前，我把 <span class="math inline">\(N\times dims\)</span> 的数据重整成了以特征优先的 <span class="math inline">\(dims\times N\)</span> 形状，这样在训练过程中就只需要对 <code>x[featureIndex]</code> 进行连续读取，对 cache 更友好。</p>
+<h4 id="索引排序">4.3.2 索引排序</h4>
+<p>在 3.1.2 中提到，为了减少内存的操作而使用索引的形式来传递样本划分信息。但在后来发现造成了性能的下降，经过排查发现是因为加入了 subsample 功能即“对于每棵子树只使用训练样本的一部分进行训练”。为了实现这一功能，在生成初始索引的时候：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// generate subsample</span></div><div class="line"><span class="keyword">auto</span> sampleSize = <span class="keyword">size_t</span>(y.size() * config.subsample);</div><div class="line"><span class="function">Index <span class="title">index</span><span class="params">(sampleSize)</span></span>;</div><div class="line"><span class="built_in">std</span>::uniform_int_distribution&lt;<span class="keyword">size_t</span>&gt; dis(<span class="number">0</span>, y.size() - <span class="number">1</span>);</div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; index.size(); i++) index[i] = dis(gen); <span class="comment">// sample with replacement</span></div></pre></td></tr></table></figure>
+<p>得到的索引是无序的，这也造成了形如 <code>x[featureIndex][index[i]]</code> 的遍历读取是乱序的、cache 不友好的。于是通过对生成的索引进行排序从而解决：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// generate subsample</span></div><div class="line"><span class="keyword">auto</span> sampleSize = <span class="keyword">size_t</span>(y.size() * config.subsample);</div><div class="line"><span class="function">Index <span class="title">index</span><span class="params">(sampleSize)</span></span>;</div><div class="line"><span class="built_in">std</span>::uniform_int_distribution&lt;<span class="keyword">size_t</span>&gt; dis(<span class="number">0</span>, y.size() - <span class="number">1</span>);</div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; index.size(); i++) index[i] = dis(gen); <span class="comment">// sample with replacement</span></div><div class="line">sort(index.begin(), index.end()); <span class="comment">// for cache</span></div></pre></td></tr></table></figure>
+<h4 id="连续-label-值">4.3.3 连续 label 值</h4>
+<p>相比于庞大的 X 数据，Y 只有一列，因此不采取索引方式，直接划分成左右子树的 <code>yLeft</code>与 <code>yRight</code>，进一步提升 cache 友好度：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// during splitting</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">size_t</span>&gt; leftIndex, rightIndex;</div><div class="line">Data::DataColumn leftY, rightY;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; index.size(); i++) &#123;</div><div class="line">    <span class="keyword">auto</span> ind = index[i];</div><div class="line">    <span class="keyword">if</span> (xx[ret.featureIndex][ind] &lt;= ret.splitPoint) &#123;</div><div class="line">        leftIndex.push_back(ind); <span class="comment">// to the left</span></div><div class="line">        leftY.push_back(y[i]);    <span class="comment">// split y</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        rightIndex.push_back(ind); <span class="comment">// to the right</span></div><div class="line">        rightY.push_back(y[i]);    <span class="comment">// split y</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="测试对比">5. 测试对比</h2>
+<h3 id="性能">5.1 性能</h3>
+<p>主要与 xgboost 对比。</p>
+<blockquote>
+<p>测试环境：</p>
+<ul>
+<li>i7-5700HQ + 16GB</li>
+<li>Ubuntu 16.04 (Windows Subsystem for Linux)</li>
+<li><code>g++ -std=c++17 -O3 -fopenmp -m64</code></li>
+</ul>
+<p>训练数据：</p>
+<ul>
+<li>train: <span class="math inline">\(1719691\times 201\)</span></li>
+<li>max-depth: 20</li>
+<li>subsample = 95</li>
+<li>colsample-by-tree = .93</li>
+</ul>
+</blockquote>
+<ul>
+<li>本算法：</li>
+<li>数据读取：耗时较大，约需 22s</li>
+<li>训练：每轮平均耗时 32s</li>
+<li>xgboost：</li>
+<li>数据读取：约需 4s</li>
+<li>训练：每轮平均耗时 40s</li>
+</ul>
+<h3 id="内存占用">5.2 内存占用</h3>
+<ul>
+<li>本算法：由于是把数据作为密集矩阵存储，因此对内存的消耗较大。以 672MB 的训练数据为例，因为数据较为稀疏，读入内存处理之后的占用空间膨胀到了 5GB。</li>
+<li>xgboost：同样的 672MB 训练数据，运行时约消耗 1.4GB。</li>
+</ul>
+<h3 id="预测准确性">5.3 预测准确性</h3>
+<p>由于本算法使用了 SS 方法，因此相同轮数下的预测准确率应该低于 xgboost，简单测试如下：</p>
+<ul>
+<li>本算法： <span class="math inline">\(AUC=.88256\)</span></li>
+<li>xgboost： <span class="math inline">\(AUC=.90335\)</span></li>
+</ul>
+<blockquote>
+<p>简单测试的意思是测试时并没有对提供给本算法的训练参数进行调优，使用的是如下配置：</p>
+<blockquote>
+<p>rounds = 5</p>
+<p>features = 201</p>
+<p>eta = .3</p>
+<p>maxThreads = 16</p>
+<p>gamma = 1e-4</p>
+<p>minChildWeight = 10</p>
+<p>maxDepth = 20</p>
+<p>validateSize = 0</p>
+<p>subsample = 0.9500</p>
+<p>colsampleByTree = 0.9287</p>
+</blockquote>
+</blockquote>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Ranka, Sanjay, and V. Singh. “CLOUDS: A decision tree classifier for large datasets.” Proceedings of the 4th Knowledge Discovery and Data Mining Conference. 1998.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/GBDT/" rel="tag"># GBDT</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/07/TypeScript初战Chrome插件：Bilibili弹幕热度/" rel="next" title="TypeScript初战Chrome插件：Bilibili弹幕热度">
+                <i class="fa fa-chevron-left"></i> TypeScript初战Chrome插件：Bilibili弹幕热度
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Zhu Chu" />
+          <p class="site-author-name" itemprop="name">Zhu Chu</p>
+           
+              <p class="site-description motion-element" itemprop="description">Everything is for DOPAMINE</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/MegrezZhu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhu-chu-48" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/i490815101" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#构建与使用"><span class="nav-number">1.</span> <span class="nav-text">1. 构建与使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构建"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法原理"><span class="nav-number">2.</span> <span class="nav-text">2. 算法原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现与优化历程"><span class="nav-number">3.</span> <span class="nav-text">3. 实现与优化历程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据处理"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#初版"><span class="nav-number">3.1.1.</span> <span class="nav-text">3.1.1 初版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改进"><span class="nav-number">3.1.2.</span> <span class="nav-text">3.1.2 改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最终版"><span class="nav-number">3.1.3.</span> <span class="nav-text">3.1.3 最终版</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决策树生成"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 决策树生成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#计算划分点"><span class="nav-number">3.2.1.</span> <span class="nav-text">3.2.1 计算划分点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#基于排序的实现"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">3.2.1.1 基于排序的实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#基于采样分桶的实现"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">3.2.1.2 基于采样分桶的实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#加入并行"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">3.2.1.3 加入并行</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#节点生成"><span class="nav-number">3.2.2.</span> <span class="nav-text">3.2.2 节点生成</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预测"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#boosting"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 Boosting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他优化"><span class="nav-number">4.</span> <span class="nav-text">4. 其他优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#性能优化"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sample性能"><span class="nav-number">4.1.1.</span> <span class="nav-text">4.1.1 sample性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#节点分割"><span class="nav-number">4.1.2.</span> <span class="nav-text">4.1.2 节点分割</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并行化"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 并行化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cache性能优化"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 cache性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#x重整"><span class="nav-number">4.3.1.</span> <span class="nav-text">4.3.1 X重整</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引排序"><span class="nav-number">4.3.2.</span> <span class="nav-text">4.3.2 索引排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连续-label-值"><span class="nav-number">4.3.3.</span> <span class="nav-text">4.3.3 连续 label 值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试对比"><span class="nav-number">5.</span> <span class="nav-text">5. 测试对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#性能"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存占用"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 内存占用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预测准确性"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 预测准确性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhu Chu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c0d6ba65b31b4ba87346',
+      clientSecret: '2bb754d2cc0c494c6acded68b705fdc44fac9ca1',
+      repo: 'MegrezZhu.github.io',
+      owner: 'MegrezZhu',
+      admin: ['MegrezZhu'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
